@@ -1,6 +1,6 @@
 import { loadCollectionData, saveCollectionData } from "./firebase.js";
 
-const STORAGE_KEY = "aoa-ground-trainer-bookings-v2";
+const STORAGE_KEY = "aoa-ground-trainer-bookings-v3";
 const START_HOUR = 6;
 const END_HOUR = 22;
 const SLOT_INCREMENT = 0.5;
@@ -76,9 +76,54 @@ function formatRange(booking) {
 function seedBookings() {
   const monday = getMonday(new Date());
   return [
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Avery Collins", initials: "AC", date: dateKey(addDays(monday, 0)), startHour: 6.5, duration: 1.5, type: "lesson", notes: "Instrument scan" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Room Reservation", initials: "RR", date: dateKey(addDays(monday, 0)), startHour: 8.5, duration: 1, type: "reservation", notes: "New-hire onboarding" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Noah Patel", initials: "NP", date: dateKey(addDays(monday, 0)), startHour: 10, duration: 2, type: "lesson", notes: "PPL procedures" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Chris Freeman", initials: "CF", date: dateKey(addDays(monday, 0)), startHour: 13, duration: 2, type: "lesson", notes: "IRA stage prep" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Maintenance Hold", initials: "MX", date: dateKey(addDays(monday, 0)), startHour: 16, duration: 1, type: "reservation", notes: "Projector swap" },
+
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Sofia Bennett", initials: "SB", date: dateKey(addDays(monday, 1)), startHour: 7, duration: 2, type: "lesson", notes: "Approach setup" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Marcus Rivera", initials: "MR", date: dateKey(addDays(monday, 1)), startHour: 9.5, duration: 1.5, type: "lesson", notes: "Hold entries" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Dispatch Block", initials: "DB", date: dateKey(addDays(monday, 1)), startHour: 12, duration: 1, type: "reservation", notes: "Walk-in overflow" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Emma Hawkins", initials: "EH", date: dateKey(addDays(monday, 1)), startHour: 14, duration: 2, type: "lesson", notes: "XC briefing" },
+
     { id: crypto.randomUUID(), trainer: "trainer1", name: "Eddie Jackson", initials: "EJ", date: dateKey(addDays(monday, 2)), startHour: 7, duration: 3, type: "lesson", notes: "BTU" },
-    { id: crypto.randomUUID(), trainer: "trainer1", name: "Room Reservation", initials: "RR", date: dateKey(addDays(monday, 4)), startHour: 10, duration: 1, type: "reservation", notes: "" },
-    { id: crypto.randomUUID(), trainer: "trainer2", name: "Sandra Lee", initials: "SL", date: dateKey(addDays(monday, 3)), startHour: 10, duration: 2, type: "lesson", notes: "Sim" }
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Saif Hussein", initials: "SH", date: dateKey(addDays(monday, 2)), startHour: 11, duration: 1.5, type: "lesson", notes: "Pre-solo" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Stage Check Brief", initials: "SC", date: dateKey(addDays(monday, 2)), startHour: 13.5, duration: 1, type: "reservation", notes: "Paperwork review" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Julian Kim", initials: "JK", date: dateKey(addDays(monday, 2)), startHour: 15, duration: 2, type: "lesson", notes: "CFI mock oral" },
+
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Trevor Kwiatkowski", initials: "TK", date: dateKey(addDays(monday, 3)), startHour: 6, duration: 2, type: "lesson", notes: "Pattern flow" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Bryan Dispatch", initials: "BD", date: dateKey(addDays(monday, 3)), startHour: 9, duration: 1, type: "reservation", notes: "Visitor demo" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Daniel Weis", initials: "DW", date: dateKey(addDays(monday, 3)), startHour: 11, duration: 2.5, type: "lesson", notes: "IRA review" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Open House", initials: "OH", date: dateKey(addDays(monday, 3)), startHour: 17, duration: 1.5, type: "reservation", notes: "Admissions tour" },
+
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Room Reservation", initials: "RR", date: dateKey(addDays(monday, 4)), startHour: 10, duration: 1, type: "reservation", notes: "Parent meeting" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Max Olsen", initials: "MO", date: dateKey(addDays(monday, 4)), startHour: 11.5, duration: 2, type: "lesson", notes: "Nav log review" },
+    { id: crypto.randomUUID(), trainer: "trainer1", name: "Lauren Bourret", initials: "LB", date: dateKey(addDays(monday, 4)), startHour: 14.5, duration: 1.5, type: "lesson", notes: "Dispatch standards" },
+
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Sandra Lee", initials: "SL", date: dateKey(addDays(monday, 0)), startHour: 7.5, duration: 2, type: "lesson", notes: "Sim" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Alysha Andrade", initials: "AA", date: dateKey(addDays(monday, 0)), startHour: 10, duration: 1.5, type: "lesson", notes: "IRA written review" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Inventory Audit", initials: "IA", date: dateKey(addDays(monday, 0)), startHour: 13, duration: 1, type: "reservation", notes: "Headsets + adapters" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Tyler Wobschall", initials: "TW", date: dateKey(addDays(monday, 0)), startHour: 15, duration: 2, type: "lesson", notes: "PPL oral prep" },
+
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Miguel Trejo", initials: "MT", date: dateKey(addDays(monday, 1)), startHour: 6.5, duration: 1.5, type: "lesson", notes: "Radio calls" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Ethan Winkler", initials: "EW", date: dateKey(addDays(monday, 1)), startHour: 9, duration: 2, type: "lesson", notes: "IRA mock check" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Front Desk Hold", initials: "FD", date: dateKey(addDays(monday, 1)), startHour: 12.5, duration: 1, type: "reservation", notes: "Student orientation" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Will Wood", initials: "WW", date: dateKey(addDays(monday, 1)), startHour: 14, duration: 2, type: "lesson", notes: "PPL review" },
+
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Nick Olsen", initials: "NO", date: dateKey(addDays(monday, 2)), startHour: 8, duration: 1.5, type: "lesson", notes: "Stage 5 prep" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Briefing Block", initials: "BB", date: dateKey(addDays(monday, 2)), startHour: 10.5, duration: 1, type: "reservation", notes: "Check instructor sync" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Sebastian Velez", initials: "SV", date: dateKey(addDays(monday, 2)), startHour: 12, duration: 2, type: "lesson", notes: "PPL polish" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Rebecca Hardy", initials: "RH", date: dateKey(addDays(monday, 2)), startHour: 15, duration: 2.5, type: "lesson", notes: "CFII oral prep" },
+
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Raphael Taveira", initials: "RT", date: dateKey(addDays(monday, 3)), startHour: 7, duration: 2, type: "lesson", notes: "Commercial systems" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Kevin Abi", initials: "KA", date: dateKey(addDays(monday, 3)), startHour: 10, duration: 1.5, type: "lesson", notes: "FOI practice" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Team Debrief", initials: "TD", date: dateKey(addDays(monday, 3)), startHour: 13, duration: 1, type: "reservation", notes: "Progress check wrap-up" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Nanette Disla", initials: "ND", date: dateKey(addDays(monday, 3)), startHour: 15.5, duration: 2, type: "lesson", notes: "Commercial maneuvers" },
+
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Jeffery Garrity", initials: "JG", date: dateKey(addDays(monday, 4)), startHour: 8.5, duration: 2, type: "lesson", notes: "IRA wrap-up" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Counseling Slot", initials: "CS", date: dateKey(addDays(monday, 4)), startHour: 11.5, duration: 1, type: "reservation", notes: "Student support" },
+    { id: crypto.randomUUID(), trainer: "trainer2", name: "Drew Kelly", initials: "DK", date: dateKey(addDays(monday, 4)), startHour: 13, duration: 2, type: "lesson", notes: "Stage check debrief" }
   ];
 }
 
