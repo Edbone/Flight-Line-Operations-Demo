@@ -555,7 +555,7 @@ button {
 .tuition-alert-warning {
   border: 1px solid #fde68a;
   background: #fffbeb;
-  color: #92400e;
+  color: var(--text);
 }
 
 .tuition-alert-error {
@@ -691,7 +691,7 @@ button {
 }
 
 .tuition-table td small {
-  color: #b45309;
+  color: var(--text);
 }
 
 .tuition-row-actions {
@@ -718,7 +718,7 @@ button {
 
 .tuition-status-upcoming {
   background: #fef3c7;
-  color: #92400e;
+  color: var(--text);
 }
 
 .tuition-status-ok {
@@ -868,7 +868,7 @@ button {
 
 .status-pending {
   background: #fef3c7;
-  color: #92400e;
+  color: var(--text);
 }
 
 .delay-reason {
@@ -1112,7 +1112,7 @@ button {
   line-height: 1.25;
 }
 
-.aircraft-yellow { background: #fde7a4; color: #795c0c; }
+.aircraft-yellow { background: #fde7a4; color: var(--text); }
 .aircraft-blue { background: #bfdbfe; color: #1d4ed8; }
 .aircraft-purple { background: #e9d5ff; color: #7e22ce; }
 .aircraft-orange { background: #fed7aa; color: #9a3412; }
@@ -1361,7 +1361,7 @@ button {
 
 .issue-level {
   background: #fef3c7;
-  color: #92400e;
+  color: var(--text);
 }
 
 .issue-other {
@@ -1672,8 +1672,8 @@ button {
 }
 
 .day-header.today {
-  background: #fff9e9;
-  color: #8e680b;
+  background: rgba(0, 183, 255, 0.1);
+  color: var(--text);
 }
 
 .day-header.today strong {
@@ -1829,7 +1829,7 @@ button {
 .booking-reservation {
   border-left-color: #b98208;
   background: #fff5d9;
-  color: #725208;
+  color: var(--text);
 }
 
 .booking-maintenance {
@@ -2094,7 +2094,7 @@ button {
   padding: 5px 10px;
   border-radius: 999px;
   background: #fde7b3;
-  color: #7b4b00;
+  color: var(--text);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -2721,7 +2721,7 @@ button {
 .written-status-close {
   justify-self: end;
   background: #fff0c7;
-  color: #815d07;
+  color: var(--accent);
 }
 
 .written-status-progress {
@@ -2964,7 +2964,7 @@ button {
 
 .secondary {
   background: rgba(251, 191, 36, 0.12);
-  color: #92400e;
+  color: var(--text);
   border: 1px solid rgba(251, 191, 36, 0.25);
 }
 
@@ -3053,7 +3053,7 @@ button {
   padding: 8px 12px;
   border-radius: 999px;
   background: rgba(251, 191, 36, 0.16);
-  color: #92400e;
+  color: var(--text);
   font-size: 0.9rem;
 }
 
@@ -3096,7 +3096,7 @@ footer {
   padding: 0 max(24px, calc((100vw - 1540px) / 2));
   border-bottom: 3px solid var(--accent-strong);
   background: var(--navy);
-  box-shadow: 0 6px 20px rgba(12, 22, 58, 0.18);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
 }
 
 .brand {
@@ -3177,7 +3177,7 @@ footer {
   bottom: 0;
   left: 15px;
   height: 3px;
-  background: #f4c84d;
+  background: var(--accent-strong);
   content: "";
 }
 
@@ -3234,7 +3234,7 @@ footer {
 .section-label {
   display: block;
   margin-bottom: 10px;
-  color: #a17408;
+  color: var(--accent);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -3271,7 +3271,7 @@ footer {
 
 .text-link span {
   margin-left: 5px;
-  color: #b8860b;
+  color: var(--accent);
 }
 
 .hero-brand-panel {
@@ -3369,7 +3369,7 @@ footer {
 
 .embed-card header .embed-card-label {
   margin: 0 0 2px;
-  color: #9b7008;
+  color: var(--accent);
   font-size: 0.58rem;
   font-weight: 850;
   letter-spacing: 0.12em;
@@ -3651,7 +3651,7 @@ footer {
   padding: 0;
   border-radius: 0;
   background: transparent;
-  color: #9b7008;
+  color: var(--accent);
   font-size: 0.7rem;
   font-weight: 850;
   letter-spacing: 0.13em;
