@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track AOA E6B equipment checkouts and returns." />
+  <title>E6B Rentals — AOA SSR Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more active"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a class="active" href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+  <div class="tracker-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow equipment-eyebrow">Equipment Checkout</span>
+        <h1>E6B rental tracker</h1>
+        <p>Track who has each E6B, when it was checked out, and when it was returned.</p>
+      </div>
+      <div class="controls">
+        <button class="button secondary" id="export-rentals-button" type="button">Export CSV</button>
+        <button class="button primary equipment-primary" id="open-rental-form-button" type="button">+ Check out E6B</button>
+      </div>
+    </header>
+
+    <section class="metric-grid" aria-label="Rental summary">
+      <article class="metric-card metric-blue">
+        <span>Currently checked out</span>
+        <strong id="active-rentals">0</strong>
+        <small>Open equipment rentals</small>
+      </article>
+      <article class="metric-card metric-red">
+        <span>Overdue rentals</span>
+        <strong id="overdue-rentals">0</strong>
+        <small>Open longer than 14 days</small>
+      </article>
+      <article class="metric-card metric-green">
+        <span>Available E6Bs</span>
+        <strong id="available-e6bs">0</strong>
+        <small id="inventory-detail">From tracked inventory</small>
+      </article>
+      <article class="metric-card metric-yellow">
+        <span>Average rental length</span>
+        <strong id="average-rental">0 days</strong>
+        <small>Completed rentals</small>
+      </article>
+    </section>
+
+    <section class="equipment-layout">
+      <div class="tracker-panel">
+        <div class="tracker-toolbar">
+          <div class="filter-group">
+            <label class="search-field">
+              <span class="sr-only">Search rental history</span>
+              <input id="rental-search" type="search" placeholder="Search name or E6B number…" />
+            </label>
+            <label>
+              <span class="sr-only">Filter by rental status</span>
+              <select id="rental-status-filter">
+                <option value="">All rentals</option>
+                <option value="active">Checked out</option>
+                <option value="overdue">Overdue</option>
+                <option value="returned">Returned</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">Filter by E6B number</span>
+              <select id="e6b-filter"><option value="">All E6Bs</option></select>
+            </label>
+          </div>
+          <p id="rental-result-count" class="result-count"></p>
+        </div>
+
+        <div class="tracker-table-wrap">
+          <table class="tracker-table equipment-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>E6B Number</th>
+                <th>Checkout Date</th>
+                <th>Return Date</th>
+                <th>Rental Length</th>
+                <th>Status</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="rental-rows"></tbody>
+          </table>
+          <div class="empty-state" id="rental-empty-state" hidden>
+            <strong>No rentals found</strong>
+            <p>Try another filter or check out an E6B.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="fleet-panel equipment-inventory">
+        <div class="fleet-heading equipment-heading">
+          <div>
+            <span>Inventory</span>
+            <h2>E6B availability</h2>
+          </div>
+        </div>
+        <div id="e6b-inventory-list" class="fleet-list inventory-list"></div>
+      </aside>
+    </section>
+  </div>
+
+  <dialog id="rental-dialog" class="request-dialog">
+    <form id="rental-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow equipment-eyebrow">New Checkout</span>
+          <h2>Check out an E6B</h2>
+        </div>
+        <button class="icon-button" id="close-rental-form-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label class="full-field">Name <input name="name" required /></label>
+        <label>E6B number
+          <select name="e6bNumber" required>
+            <option value="">Select E6B</option>
+            <option value="1">E6B 1</option><option value="2">E6B 2</option><option value="3">E6B 3</option>
+            <option value="4">E6B 4</option><option value="5">E6B 5</option>
+          </select>
+        </label>
+        <label>Checkout date <input name="checkoutDate" type="date" required /></label>
+        <label>Return date <input name="returnDate" type="date" /></label>
+        <label>Notes <input name="notes" placeholder="Optional" /></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="cancel-rental-form-button" type="button">Cancel</button>
+        <button class="button primary equipment-primary" type="submit">Save checkout</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="e6b-rentals.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Weekly ground trainer booking schedule for Academy of Aviation." />
+  <title>Ground Trainer Schedule - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a class="active" href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+
+  <main class="trainer-page">
+    <header class="trainer-page-header">
+      <div>
+        <h1>Ground Trainers</h1>
+      </div>
+      <button class="button primary" id="open-booking-dialog" type="button">New booking</button>
+    </header>
+
+    <section class="trainer-toolbar" aria-label="Schedule controls">
+      <nav class="trainer-tabs" role="tablist" aria-label="Select ground trainer">
+        <button class="trainer-tab active" type="button" role="tab" aria-selected="true" data-trainer="trainer1"><span class="trainer-status"></span>Ground Trainer 1</button>
+        <button class="trainer-tab" type="button" role="tab" aria-selected="false" data-trainer="trainer2"><span class="trainer-status"></span>Ground Trainer 2</button>
+      </nav>
+
+      <div class="week-controls">
+        <button class="icon-control" id="previous-week" type="button" aria-label="Previous week">‹</button>
+        <button class="button secondary" id="today-week" type="button">Today</button>
+        <button class="icon-control" id="next-week" type="button" aria-label="Next week">›</button>
+        <strong id="week-label"></strong>
+      </div>
+
+      <label class="trainer-search">
+        <span class="sr-only">Search bookings</span>
+        <input id="booking-search" type="search" placeholder="Search bookings..." />
+      </label>
+    </section>
+
+    <section class="calendar-shell" aria-label="Weekly booking calendar">
+      <div class="calendar-scroll">
+        <div class="trainer-calendar" id="trainer-calendar"></div>
+      </div>
+      <div class="calendar-legend">
+        <span><i class="legend-dot lesson"></i>Lesson</span>
+        <span><i class="legend-dot reservation"></i>Reservation</span>
+        <span><i class="legend-dot maintenance"></i>Maintenance</span>
+        <span class="drag-hint">Click a time slot to add · Drag to move</span>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="request-dialog booking-dialog" id="booking-dialog">
+    <form id="booking-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Ground Trainer</span><h2 id="booking-dialog-title">New booking</h2></div>
+        <button class="icon-button" id="close-booking-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <input name="bookingId" type="hidden" />
+      <div class="form-grid">
+        <label class="full-field">Student or reservation name <input name="name" required placeholder="Enter a name" /></label>
+        <label>Ground trainer
+          <select name="trainer" required>
+            <option value="trainer1">Ground Trainer 1</option>
+            <option value="trainer2">Ground Trainer 2</option>
+          </select>
+        </label>
+        <label>Booking type
+          <select name="type" required>
+            <option value="lesson">Lesson</option>
+            <option value="reservation">Reservation</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
+        </label>
+        <label>Initials <input name="initials" maxlength="8" required placeholder="AA" /></label>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Start time <input name="startTime" type="time" min="06:00" max="21:30" step="1800" required /></label>
+        <label>Duration
+          <select name="duration" required>
+            <option value="0.5">30 minutes</option>
+            <option value="1">1 hour</option>
+            <option value="1.5">1.5 hours</option>
+            <option value="2">2 hours</option>
+            <option value="2.5">2.5 hours</option>
+            <option value="3">3 hours</option>
+            <option value="3.5">3.5 hours</option>
+            <option value="4">4 hours</option>
+          </select>
+        </label>
+        <label>Course / notes <input name="notes" placeholder="Optional" /></label>
+      </div>
+      <div class="dialog-actions booking-dialog-actions">
+        <button class="button danger-button" id="delete-booking" type="button" hidden>Delete booking</button>
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-booking" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save booking</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="schedule-toast" id="schedule-toast" role="status" aria-live="polite"></div>
+  <script type="module" src="sheet1.js"></script>
+</body>
+</html>

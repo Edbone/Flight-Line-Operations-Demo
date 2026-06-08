@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track aircraft fueling delays, water contamination, fuel levels, and operational notes." />
+  <title>Fuel Discrepancies — AOA SSR Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more active"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a class="active" href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+  <div class="tracker-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow fuel-eyebrow">Fleet Operations</span>
+        <h1>Fuel discrepancies</h1>
+        <p>Track fueling delays, water contamination reports, and operational impact.</p>
+      </div>
+      <div class="controls">
+        <button class="button secondary" id="export-fuel-button" type="button">Export CSV</button>
+        <button class="button primary fuel-primary" id="open-fuel-form-button" type="button">+ Report discrepancy</button>
+      </div>
+    </header>
+
+    <section class="metric-grid" aria-label="Fuel discrepancy summary">
+      <article class="metric-card metric-blue">
+        <span>Total reports</span>
+        <strong id="fuel-report-count">0</strong>
+        <small id="fuel-report-period">All recorded discrepancies</small>
+      </article>
+      <article class="metric-card metric-red">
+        <span>Water in tanks</span>
+        <strong id="water-report-count">0</strong>
+        <small>Contamination reports</small>
+      </article>
+      <article class="metric-card metric-yellow">
+        <span>Average waiting time</span>
+        <strong id="average-wait">0 min</strong>
+        <small>Reports with wait time recorded</small>
+      </article>
+      <article class="metric-card metric-green">
+        <span>Most reported aircraft</span>
+        <strong id="most-reported-aircraft">—</strong>
+        <small id="most-reported-detail">No reports</small>
+      </article>
+    </section>
+
+    <section class="fuel-layout">
+      <div class="tracker-panel">
+        <div class="tracker-toolbar">
+          <div class="filter-group">
+            <label class="search-field">
+              <span class="sr-only">Search discrepancies</span>
+              <input id="fuel-search" type="search" placeholder="Search tail number or notes…" />
+            </label>
+            <label>
+              <span class="sr-only">Filter by issue</span>
+              <select id="fuel-issue-filter">
+                <option value="">All issues</option>
+                <option>Delayed</option>
+                <option>Water in tanks</option>
+                <option>Incorrect fuel level</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">Filter by aircraft</span>
+              <select id="fuel-aircraft-filter"><option value="">All aircraft</option></select>
+            </label>
+            <label>
+              <span class="sr-only">Filter by year</span>
+              <select id="fuel-year-filter"><option value="">All years</option></select>
+            </label>
+          </div>
+          <p id="fuel-result-count" class="result-count"></p>
+        </div>
+
+        <div class="tracker-table-wrap">
+          <table class="tracker-table fuel-table">
+            <thead>
+              <tr>
+                <th>Tail Number</th>
+                <th>Date</th>
+                <th>Issue</th>
+                <th>Waiting Time</th>
+                <th>Fuel Level</th>
+                <th>Notes</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="fuel-rows"></tbody>
+          </table>
+          <div class="empty-state" id="fuel-empty-state" hidden>
+            <strong>No discrepancies found</strong>
+            <p>Try another filter or report a discrepancy.</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="fleet-panel fuel-summary-panel">
+        <div class="fleet-heading fuel-heading">
+          <div>
+            <span>Aircraft Summary</span>
+            <h2>Reports by aircraft</h2>
+          </div>
+        </div>
+        <div id="fuel-aircraft-summary" class="fleet-list inventory-list"></div>
+      </aside>
+    </section>
+  </div>
+
+  <dialog id="fuel-dialog" class="request-dialog">
+    <form id="fuel-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow fuel-eyebrow">New Report</span>
+          <h2>Report fuel discrepancy</h2>
+        </div>
+        <button class="icon-button" id="close-fuel-form-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label>Tail number
+          <select name="tailNumber" required>
+            <option value="">Select aircraft</option>
+            <option>N174TH</option><option>N24108</option><option>N464ER</option>
+            <option>N52522</option><option>N55297</option><option>N6064R</option>
+          </select>
+        </label>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Issue
+          <select name="issue" required>
+            <option value="">Select issue</option>
+            <option>Delayed</option><option>Water in tanks</option><option>Incorrect fuel level</option><option>Other</option>
+          </select>
+        </label>
+        <label>Waiting time (minutes) <input name="waitingMinutes" type="number" min="0" step="1" placeholder="Optional" /></label>
+        <label>Fuel level (gallons) <input name="fuelLevel" type="number" min="0" step="0.1" placeholder="Optional" /></label>
+        <label class="full-field">Notes <textarea name="notes" rows="3" required placeholder="Describe the discrepancy and operational impact"></textarea></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="cancel-fuel-form-button" type="button">Cancel</button>
+        <button class="button primary fuel-primary" type="submit">Add report</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="fuel-discrepancies.js"></script>
+</body>
+</html>

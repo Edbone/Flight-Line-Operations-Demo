@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="View the live maintenance tracking dashboard for the AOA fleet." />
+  <title>Maintenance Tracker — AOA SSR Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a class="active" href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+
+  <main class="maintenance-page">
+    <section class="maintenance-header">
+      <div>
+        <h1>Maintenance Tracker</h1>
+        <p>Live fleet maintenance dashboard.</p>
+      </div>
+      <a class="button primary" href="https://maintenance.aoadispatch.com/dashboard" target="_blank" rel="noopener noreferrer">Open dashboard</a>
+    </section>
+    <section class="maintenance-frame-shell" aria-label="Maintenance tracking dashboard">
+      <iframe
+        src="https://maintenance.aoadispatch.com/dashboard"
+        title="AOA Maintenance Tracking Dashboard"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
+    </section>
+  </main>
+</body>
+</html>

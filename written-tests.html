@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track Academy of Aviation written practice test scores and completion." />
+  <title>Written Test Scores - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more active"><summary>Spreadsheets</summary><div class="nav-more-menu"><a class="active" href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+
+  <main class="tracker-page written-page">
+    <section class="written-topbar" aria-label="Written test actions">
+      <div class="written-topbar-copy">
+        <span class="eyebrow">Written Tests</span>
+        <p>Three consecutive 90% scores completes a test.</p>
+      </div>
+    </section>
+
+    <section class="metric-grid" aria-label="Written test summary">
+      <article class="metric-card metric-blue"><span>Students tracked</span><strong id="written-student-count">0</strong><small>Unique student records</small></article>
+      <article class="metric-card metric-green"><span>Completed tests</span><strong id="written-complete-count">0</strong><small>Three consecutive 90s</small></article>
+      <article class="metric-card metric-yellow"><span>One score away</span><strong id="written-close-count">0</strong><small>Current streak of two</small></article>
+      <article class="metric-card metric-red"><span>Needs progress</span><strong id="written-progress-count">0</strong><small>Current streak below two</small></article>
+    </section>
+
+    <section class="written-workspace">
+      <section class="written-progress-panel">
+        <div class="tracker-toolbar written-toolbar">
+          <div class="filter-group">
+            <label class="search-field"><span class="sr-only">Search students</span><input id="written-search" type="search" placeholder="Search student or test..." /></label>
+            <label><span class="sr-only">Filter by test</span><select id="written-test-filter"><option value="">All tests</option></select></label>
+            <label><span class="sr-only">Filter by progress</span><select id="written-status-filter"><option value="">All progress</option><option value="complete">Complete</option><option value="close">One score away</option><option value="progress">Needs progress</option></select></label>
+          </div>
+          <div class="written-toolbar-actions">
+            <p class="result-count" id="written-result-count"></p>
+            <button class="button primary" id="open-score-form-button" type="button">Add test score</button>
+          </div>
+        </div>
+        <div class="written-student-list" id="written-student-list"></div>
+        <div class="empty-state" id="written-empty-state" hidden><strong>No written-test records found</strong><p>Try another filter or add a score.</p></div>
+      </section>
+
+      <section class="written-schedule-panel" aria-label="Written test scheduling">
+        <div class="written-schedule-header">
+          <span class="section-label">Scheduling</span>
+          <div class="written-schedule-controls">
+            <button class="button quiet" id="previous-written-month" type="button" aria-label="Previous month">←</button>
+            <strong id="written-schedule-month-label">Month</strong>
+            <button class="button quiet" id="next-written-month" type="button" aria-label="Next month">→</button>
+            <button class="button quiet" id="today-written-month" type="button">Today</button>
+            <button class="button primary" id="open-written-booking-button" type="button">Add booking</button>
+          </div>
+        </div>
+
+        <div class="written-calendar-shell">
+          <div class="written-schedule-calendar" id="written-schedule-calendar"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog class="request-dialog" id="score-dialog">
+    <form id="score-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Practice Written</span><h2>Add test score</h2></div>
+        <button class="icon-button" id="close-score-form-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label class="full-field">Student name <input name="student" list="written-students" required /></label>
+        <label>Test
+          <select name="test" required><option value="">Select test</option><option>PPL</option><option>IRA</option><option>CAX</option><option>COM</option><option>FOI</option><option>FIA</option><option>CFII</option><option>IFR</option><option>Other</option></select>
+        </label>
+        <label>Score <input name="score" type="number" min="0" max="100" step="0.1" required placeholder="90" /></label>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Time <input name="time" type="time" /></label>
+        <label>SSR initials <input name="initials" maxlength="8" placeholder="AA" /></label>
+        <label class="full-field">Notes <input name="notes" placeholder="Optional" /></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="cancel-score-form-button" type="button">Cancel</button>
+        <button class="button primary" type="submit">Add score</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog" id="written-booking-dialog">
+    <form class="written-schedule-form" id="written-schedule-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Written Test</span><h2>Add booking</h2></div>
+        <button class="icon-button" id="close-written-booking-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="form-grid">
+        <label class="full-field">Student
+          <input name="student" list="written-students" required placeholder="Student name" />
+        </label>
+        <label>Test
+          <select name="test" required>
+            <option value="">Select test</option>
+            <option>PPL</option>
+            <option>IRA</option>
+            <option>CAX</option>
+            <option>COM</option>
+            <option>FOI</option>
+            <option>FIA</option>
+            <option>CFII</option>
+            <option>IFR</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Date
+          <input name="date" type="date" required />
+        </label>
+        <label>Start time
+          <input name="time" type="time" min="08:00" max="17:30" step="1800" required />
+        </label>
+        <label>Duration
+          <select name="duration" required>
+            <option value="0.5">30 minutes</option>
+            <option value="1" selected>1 hour</option>
+            <option value="1.5">1.5 hours</option>
+            <option value="2">2 hours</option>
+            <option value="2.5">2.5 hours</option>
+            <option value="3">3 hours</option>
+            <option value="3.5">3.5 hours</option>
+            <option value="4">4 hours</option>
+          </select>
+        </label>
+        <label>SSR initials
+          <input name="initials" maxlength="8" required placeholder="AA" />
+        </label>
+        <label class="full-field">Notes
+          <input name="notes" placeholder="Optional accommodations or reminders" />
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="cancel-written-booking-button" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save booking</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog" id="written-day-dialog">
+    <form id="written-day-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Written Test</span><h2 id="written-day-title">Day bookings</h2></div>
+        <button class="icon-button" id="close-written-day-button" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="written-day-dialog-list" id="written-day-dialog-list"></div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="close-written-day-footer-button" type="button">Close</button>
+      </div>
+    </form>
+  </dialog>
+  <datalist id="written-students"></datalist>
+  <div class="schedule-toast" id="written-toast" role="status" aria-live="polite"></div>
+  <script type="module" src="written-tests.js"></script>
+</body>
+</html>

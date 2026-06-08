@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Share signed staff notes for AOA operations." />
+  <title>Staff Notes — AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a class="active" href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+
+  <main class="notes-page">
+    <header class="notes-header">
+      <div>
+        <span class="section-label">Staff Communication</span>
+        <h1>Operations notes</h1>
+        <p>Leave an update for the team. Every note must be signed with your name.</p>
+      </div>
+    </header>
+
+    <section class="notes-layout">
+      <form class="note-composer" id="note-form">
+        <div class="note-composer-heading">
+          <div>
+            <span class="section-label">New Note</span>
+            <h2>Share an update</h2>
+          </div>
+        </div>
+        <label>
+          Note
+          <textarea name="message" rows="7" maxlength="1500" required placeholder="What does the team need to know?"></textarea>
+        </label>
+        <label>
+          Sign off with your name
+          <input name="author" type="text" maxlength="80" autocomplete="name" required placeholder="Your full name" />
+        </label>
+        <label class="note-pin-toggle">
+          <input name="isPinned" type="checkbox" />
+          <span>Pin this note to the top</span>
+        </label>
+        <button class="button primary" type="submit">Post signed note</button>
+      </form>
+
+      <section class="notes-board" aria-labelledby="notes-board-title">
+        <div class="notes-board-toolbar">
+          <div>
+            <span class="section-label">Team Notes</span>
+            <h2 id="notes-board-title">Latest updates</h2>
+          </div>
+          <label class="notes-search">
+            <span class="sr-only">Search notes</span>
+            <input id="notes-search" type="search" placeholder="Search notes or names…" />
+          </label>
+        </div>
+        <p class="result-count" id="notes-result-count"></p>
+        <div class="notes-list" id="notes-list"></div>
+        <div class="empty-state" id="notes-empty-state" hidden>
+          <strong>No notes found</strong>
+          <p>Post the first note or try another search.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module" src="notes.js"></script>
+</body>
+</html>

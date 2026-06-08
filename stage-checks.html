@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Track AOA stage check requests, approvals, scheduling turnaround, and delays." />
+  <title>Stage Check Tracker — AOA SSR Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a class="active" href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+  <div class="tracker-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow">Scheduling Operations</span>
+        <h1>Stage check tracker</h1>
+        <p>Track each request from submission through approval and scheduling.</p>
+      </div>
+      <div class="controls">
+        <button class="button secondary" id="restore-import-button" type="button">Restore imported data</button>
+        <button class="button secondary" id="export-button" type="button">Export CSV</button>
+        <button class="button primary" id="open-form-button" type="button">+ New request</button>
+      </div>
+    </header>
+
+    <section class="metric-grid stage-metric-grid" aria-label="Scheduling summary">
+      <article class="metric-card metric-blue">
+        <span>Open requests</span>
+        <strong id="open-count">0</strong>
+        <small>Awaiting approval or schedule</small>
+      </article>
+      <article class="metric-card metric-green">
+        <span>Scheduled within 48 hrs</span>
+        <strong id="on-time-rate">0%</strong>
+        <small id="on-time-detail">0 of 0 scheduled</small>
+      </article>
+      <article class="metric-card metric-yellow">
+        <span>Average time to schedule</span>
+        <strong id="average-hours">0 hrs</strong>
+        <small>From approval to scheduled check</small>
+      </article>
+      <article class="metric-card metric-red">
+        <span>Delayed requests</span>
+        <strong id="delayed-count">0</strong>
+        <small>Scheduled after 48 hours</small>
+      </article>
+      <article class="metric-card metric-orange">
+        <span>Student availability delays</span>
+        <strong id="student-delay-count">0</strong>
+        <small id="student-delay-detail">0% of delayed requests</small>
+      </article>
+    </section>
+
+    <section class="tracker-panel">
+      <div class="tracker-toolbar">
+        <div class="filter-group">
+          <label class="search-field">
+            <span class="sr-only">Search requests</span>
+            <input id="search-input" type="search" placeholder="Search student, course, or check…" />
+          </label>
+          <label>
+            <span class="sr-only">Filter by course</span>
+            <select id="course-filter">
+              <option value="">All courses</option>
+              <option>PPL</option>
+              <option>IRA</option>
+              <option>CAX</option>
+              <option>CFI</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>
+            <span class="sr-only">Filter by scheduling status</span>
+            <select id="status-filter">
+              <option value="">All statuses</option>
+              <option value="pending">Pending</option>
+              <option value="on-time">Scheduled ≤ 48 hrs</option>
+              <option value="delayed">Scheduled &gt; 48 hrs</option>
+              <option value="incomplete">Missing information</option>
+            </select>
+          </label>
+        </div>
+        <p id="result-count" class="result-count"></p>
+      </div>
+
+      <div class="tracker-table-wrap">
+        <table class="tracker-table">
+          <thead>
+            <tr>
+              <th>Requested</th>
+              <th>Student / Check</th>
+              <th>Availability</th>
+              <th>Approved</th>
+              <th>Scheduled</th>
+              <th>Turnaround</th>
+              <th>Status / Delay</th>
+              <th><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="request-rows"></tbody>
+        </table>
+        <div class="empty-state" id="empty-state" hidden>
+          <strong>No requests found</strong>
+          <p>Try another filter or add a new stage check request.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <dialog id="request-dialog" class="request-dialog">
+    <form id="request-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">New Request</span>
+          <h2 id="request-dialog-title">Add a stage check</h2>
+        </div>
+        <button class="icon-button" id="close-form-button" type="button" aria-label="Close">×</button>
+      </div>
+
+      <input name="requestId" type="hidden" />
+      <div class="form-grid">
+        <label>Student name <input name="student" required /></label>
+        <label>Course
+          <select name="course" required>
+            <option value="">Select course</option>
+            <option>PPL</option><option>IRA</option><option>CAX</option><option>CFI</option><option>Other</option>
+          </select>
+        </label>
+        <label class="full-field">Progress check type <input name="checkType" required placeholder="Example: Stage 2 Phase 5" /></label>
+        <label class="full-field">Student availability <textarea name="availability" rows="2" placeholder="Days and times the student can attend"></textarea></label>
+        <label>Requested <input name="requestedAt" type="datetime-local" required /></label>
+        <label>Approved <input name="approvedAt" type="datetime-local" /></label>
+        <label>Scheduled check <input name="scheduledAt" type="datetime-local" /></label>
+        <label>Recorded status
+          <select name="statusOverride">
+            <option value="">Calculate automatically</option>
+            <option value="on-time">Scheduled within 48 hrs</option>
+            <option value="delayed">Scheduled over 48 hrs</option>
+            <option value="pending">Pending</option>
+          </select>
+        </label>
+        <label>Delay reason
+          <select name="delayReason">
+            <option value="">Select a reason</option>
+            <option value="Student Not Available">Student Not Available</option>
+            <option value="Check Instructor Availability">Check Instructor Availability</option>
+            <option value="Aircraft Availability">Aircraft Availability</option>
+            <option value="Weather">Weather</option>
+            <option value="Airport / Operational Closure">Airport / Operational Closure</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label class="full-field">Notes <textarea name="notes" rows="3" placeholder="Optional scheduling context"></textarea></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button danger-button" id="delete-request-button" type="button" hidden>Delete request</button>
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-form-button" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save request</button>
+      </div>
+    </form>
+  </dialog>
+  <div class="schedule-toast" id="stage-toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="stage-checks.js"></script>
+</body>
+</html>

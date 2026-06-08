@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Academy of Aviation operational resources and staff tools." />
+  <title>KORL Dispatch Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home">
+      <img src="assets/aoa-logo.png" alt="Academy of Aviation" />
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="active" href="index.html">Home</a>
+      <a href="sheet1.html">VR Trainers</a>
+      <a href="stage-checks.html">Stage Checks</a>
+      <a href="notes.html">Notes</a>
+      <a href="maintenance.html">Maintenance</a>
+      <a href="tuition-tracking.html">Tuition Tracking</a>
+      <details class="nav-more">
+        <summary>Spreadsheets</summary>
+        <div class="nav-more-menu">
+          <a href="written-tests.html">Written Tests</a>
+          <a href="oil-tracker.html">Oil Tracker</a>
+          <a href="e6b-rentals.html">E6B Rentals</a>
+          <a href="fuel-discrepancies.html">Fuel Reports</a>
+        </div>
+      </details>
+    </nav>
+  </header>
+
+  <main class="page-shell home-page">
+    <div class="home-dashboard">
+      <section class="home-title-hero">
+        <h1>AOA Operations</h1>
+      </section>
+
+      <section class="home-notes-panel" aria-labelledby="home-notes-title">
+        <div class="home-notes-heading">
+          <div>
+            <span class="section-label">Staff Communication</span>
+            <h2 id="home-notes-title">Latest notes</h2>
+          </div>
+          <a href="notes.html">View all notes</a>
+        </div>
+        <div class="home-notes-list" id="home-notes-list"></div>
+        <div class="home-notes-empty" id="home-notes-empty" hidden>
+          <p>No staff notes have been posted yet.</p>
+          <a href="notes.html">Post the first note</a>
+        </div>
+      </section>
+
+      <section class="embed-card home-maintenance-card" aria-label="Maintenance tracker preview">
+        <header>
+          <div>
+            <span class="embed-card-label">Fleet Operations</span>
+            <strong>Maintenance Tracker</strong>
+          </div>
+          <a class="home-embed-link" href="maintenance.html">Open page</a>
+        </header>
+        <iframe
+          src="https://maintenance.aoadispatch.com/dashboard"
+          title="AOA Maintenance Tracking Dashboard Preview"
+          loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </section>
+    </div>
+
+    <section class="live-operations home-live-grid" aria-label="Live operations">
+        <article class="embed-card flight-line-status-card">
+          <header>
+            <div>
+              <span class="embed-card-label">Live Operations</span>
+              <strong id="live-operations-title">Flight Line Status</strong>
+            </div>
+            <div class="embed-header-status">
+              <span class="live-indicator"><i></i>Live</span>
+              <span class="flight-status-updated" id="flight-status-updated">Loading...</span>
+            </div>
+          </header>
+          <div class="home-metar">
+            <span>METAR</span>
+            <strong id="home-raw-metar">Loading current KORL weather...</strong>
+          </div>
+          <div class="home-flight-status" aria-live="polite">
+            <div class="home-status-head"><span>Flight Profile</span><span>Conditions</span><span>Status</span></div>
+            <div id="home-status-table"></div>
+          </div>
+        </article>
+
+        <article class="embed-card weather-embed">
+          <header>
+            <div><span class="embed-card-label">Live Operations</span><strong>Weather Radar</strong></div>
+            <a href="https://wx.ekaviates.com/" target="_blank" rel="noopener noreferrer">Open full page</a>
+          </header>
+          <iframe
+            src="https://wx.ekaviates.com/"
+            title="EK Aviates Weather Radar"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="geolocation"
+          ></iframe>
+        </article>
+    </section>
+
+    <section class="hub-section home-resources" aria-label="Resources">
+      <div class="section-heading">
+        <div>
+          <span class="section-label">Quick Links</span>
+          <h2>Resources</h2>
+        </div>
+      </div>
+      <div class="tool-grid">
+        <a class="tool-card" href="sheet1.html">
+          <span class="tool-card-copy"><strong>Ground Trainers</strong></span>
+        </a>
+        <a class="tool-card" href="stage-checks.html">
+          <span class="tool-card-copy"><strong>Stage Check Tracker</strong></span>
+        </a>
+        <a class="tool-card" href="oil-tracker.html">
+          <span class="tool-card-copy"><strong>Oil Tracking Sheet</strong></span>
+        </a>
+        <a class="tool-card" href="written-tests.html">
+          <span class="tool-card-copy"><strong>Written Test Scores</strong></span>
+        </a>
+        <a class="tool-card" href="e6b-rentals.html">
+          <span class="tool-card-copy"><strong>E6B Rental Log</strong></span>
+        </a>
+        <a class="tool-card" href="fuel-discrepancies.html">
+          <span class="tool-card-copy"><strong>Fuel Discrepancy Reports</strong></span>
+        </a>
+        <a class="tool-card" href="notes.html">
+          <span class="tool-card-copy"><strong>Staff Notes</strong></span>
+        </a>
+        <a class="tool-card" href="maintenance.html">
+          <span class="tool-card-copy"><strong>Maintenance Tracker</strong></span>
+        </a>
+        <a class="tool-card" href="tuition-tracking.html">
+          <span class="tool-card-copy"><strong>Tuition Tracking</strong></span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><span>Academy of Aviation</span><span>Staff Operations Hub</span></footer>
+  <script type="module" src="firebase.js"></script>
+  <script src="home-flight-status.js"></script>
+  <script type="module" src="home-notes.js"></script>
+</body>
+</html>

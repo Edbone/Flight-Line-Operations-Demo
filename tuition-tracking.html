@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Admin tuition payment import and tracking for AOA operations." />
+  <title>Tuition Tracking — AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /><span><strong>AOA</strong></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html">Home</a><a href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a class="active" href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
+    </nav>
+  </header>
+
+  <main class="tracker-page tuition-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow tuition-eyebrow">Admin Finance</span>
+        <h1>Tuition tracking</h1>
+        <p>Paste exported payment rows, review the cleaned records, and save them into the staff hub.</p>
+      </div>
+      <div class="controls">
+        <button class="button primary" id="open-tuition-import-button" type="button">Add / Import Payments</button>
+        <button class="button secondary" id="export-tuition-button" type="button">Export Financial CSV</button>
+      </div>
+    </header>
+
+    <nav class="tuition-view-tabs" aria-label="Tuition tracking views">
+      <button class="active" type="button" data-view="students">Students</button>
+      <button type="button" data-view="financial">Financial Details</button>
+    </nav>
+
+    <section class="tracker-panel tuition-students-panel" id="students-view" aria-labelledby="tuition-students-title">
+      <div class="tracker-toolbar tuition-toolbar">
+        <div>
+          <span class="eyebrow tuition-eyebrow">Students</span>
+          <h2 id="tuition-students-title">Tuition students</h2>
+        </div>
+        <label class="search-field">
+          <span class="sr-only">Search students</span>
+          <input id="student-summary-search" type="search" placeholder="Search student name…" />
+        </label>
+        <p id="student-summary-count" class="result-count"></p>
+      </div>
+      <section class="tuition-awareness" aria-labelledby="tuition-awareness-title">
+        <div class="tuition-awareness-heading">
+          <div>
+            <span class="eyebrow tuition-eyebrow">Dispatcher Watch</span>
+            <h3 id="tuition-awareness-title">Payment attention</h3>
+          </div>
+          <p id="tuition-awareness-count"></p>
+        </div>
+        <div class="tuition-awareness-list" id="tuition-awareness-list"></div>
+      </section>
+      <div class="tracker-table-wrap">
+        <table class="tracker-table tuition-students-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Overall Status</th>
+              <th>Unpaid Remaining</th>
+              <th>Next Due</th>
+              <th>Records</th>
+              <th><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="student-summary-rows"></tbody>
+        </table>
+        <div class="empty-state" id="student-summary-empty-state" hidden>
+          <strong>No students found</strong>
+          <p>Import payments or try another search.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="financial-view" hidden>
+      <section class="metric-grid tuition-metric-grid" aria-label="Tuition summary">
+        <article class="metric-card metric-green"><span>Total Paid</span><strong id="total-paid">$0</strong><small id="paid-record-count">0 paid records</small></article>
+        <article class="metric-card metric-red"><span>Total Past Due</span><strong id="total-past-due">$0</strong><small id="past-due-record-count">0 past due records</small></article>
+        <article class="metric-card metric-yellow"><span>Total Upcoming</span><strong id="total-upcoming">$0</strong><small id="upcoming-record-count">0 upcoming records</small></article>
+        <article class="metric-card metric-blue"><span>Total Unpaid Remaining</span><strong id="total-unpaid">$0</strong><small id="unique-student-count">0 unique students</small></article>
+      </section>
+
+      <section class="tracker-panel tuition-table-panel" aria-labelledby="tuition-table-title">
+      <div class="tracker-toolbar tuition-toolbar">
+        <div>
+          <span class="eyebrow tuition-eyebrow">Records</span>
+          <h2 id="tuition-table-title">Saved payments</h2>
+        </div>
+        <div class="filter-group tuition-filters">
+          <label class="search-field"><span class="sr-only">Search by student name</span><input id="tuition-search" type="search" placeholder="Search student name…" /></label>
+          <label><span class="sr-only">Filter by status</span><select id="status-filter"><option value="">All statuses</option><option>Paid</option><option>Past Due</option><option>Upcoming</option><option>OK</option><option>Invalid</option></select></label>
+          <label><span class="sr-only">Filter by paid</span><select id="paid-filter"><option value="">Paid and unpaid</option><option value="paid">Paid only</option><option value="unpaid">Unpaid only</option></select></label>
+          <label class="checkbox-filter"><input id="past-due-only" type="checkbox" /> <span>Past due only</span></label>
+          <label class="checkbox-filter"><input id="upcoming-only" type="checkbox" /> <span>Upcoming only</span></label>
+          <button class="button quiet" id="reset-filters-button" type="button">Reset filters</button>
+        </div>
+        <p id="tuition-result-count" class="result-count"></p>
+      </div>
+      <div class="tracker-table-wrap">
+        <table class="tracker-table tuition-table">
+          <thead>
+            <tr>
+              <th><button type="button" data-sort="studentName">Student Name</button></th>
+              <th>Payment Description</th>
+              <th><button type="button" data-sort="amount">Amount</button></th>
+              <th><button type="button" data-sort="dueDate">Due Date</button></th>
+              <th><button type="button" data-sort="paid">Paid</button></th>
+              <th>Date Paid</th>
+              <th><button type="button" data-sort="status">Status</button></th>
+              <th>Issues</th>
+              <th><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="tuition-rows"></tbody>
+        </table>
+        <div class="empty-state" id="tuition-empty-state" hidden>
+          <strong>No payment records found</strong>
+          <p>Paste exported rows above or reset the filters.</p>
+        </div>
+      </div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="tuition-import-dialog" class="request-dialog tuition-import-dialog">
+    <section class="tuition-import-panel" aria-labelledby="tuition-import-title">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow tuition-eyebrow">Paste Import</span>
+          <h2 id="tuition-import-title">Add payment data</h2>
+        </div>
+        <button class="icon-button" id="close-tuition-import-button" type="button" aria-label="Close">×</button>
+      </div>
+      <p id="tuition-import-status" aria-live="polite"></p>
+      <label class="tuition-import-name">
+        Student Name
+        <input id="tuition-import-student-name" type="text" autocomplete="off" placeholder="Required when pasted schedule does not include a name" />
+      </label>
+      <label class="tuition-import-name">
+        Your Initials
+        <input id="tuition-import-initials" type="text" maxlength="6" autocomplete="off" placeholder="Required to save imported records" />
+      </label>
+      <label class="tuition-paste-label">
+        <span class="sr-only">Paste payment data</span>
+        <textarea id="tuition-paste-box" rows="8" spellcheck="false"></textarea>
+      </label>
+      <div class="tuition-import-actions">
+        <button class="button primary" id="parse-tuition-button" type="button">Preview Pasted Data</button>
+        <button class="button secondary" id="save-tuition-import-button" type="button" disabled>Save Preview to Records</button>
+        <button class="button quiet" id="clear-paste-button" type="button">Clear Pasted Data</button>
+      </div>
+      <div class="tuition-alert" id="tuition-alert" hidden></div>
+    </section>
+  </dialog>
+
+  <dialog id="tuition-dialog" class="request-dialog tuition-edit-dialog">
+    <form id="tuition-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow tuition-eyebrow">Payment Record</span>
+          <h2>Edit payment</h2>
+        </div>
+        <button class="icon-button" id="close-tuition-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <input name="id" type="hidden" />
+      <div class="form-grid tuition-edit-grid">
+        <label>Student Name <input name="studentName" type="text" required /></label>
+        <label>Payment Description <input name="paymentDescription" type="text" /></label>
+        <label>Amount <input name="amount" type="number" min="0" step="0.01" required /></label>
+        <label>Due Date <input name="dueDate" type="date" required /></label>
+        <label class="checkbox-field tuition-paid-field"><input name="paid" type="checkbox" /> <span>Paid</span></label>
+        <label>Date Paid <input name="datePaid" type="date" /></label>
+      </div>
+      <div class="dialog-actions">
+        <button class="button quiet" id="cancel-tuition-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="tuition-tracking.js"></script>
+</body>
+</html>
