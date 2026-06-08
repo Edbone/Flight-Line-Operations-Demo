@@ -1,4 +1,5 @@
 import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { demoNotes } from "./demo-data.js";
 
 const NOTES_STORAGE_KEY = "aoa-staff-notes-v1";
 
@@ -10,7 +11,8 @@ const emptyState = document.querySelector("#notes-empty-state");
 let notes = [];
 
 async function loadNotes() {
-  return await loadCollectionData("notes", NOTES_STORAGE_KEY);
+  const loaded = await loadCollectionData("notes", NOTES_STORAGE_KEY);
+  return Array.isArray(loaded) && loaded.length > 0 ? loaded : demoNotes;
 }
 
 async function saveNotes() {
@@ -238,6 +240,5 @@ searchInput.addEventListener("input", render);
 
 (async () => {
   notes = (await loadNotes()).map(normalizeNote);
-  await saveNotes();
   render();
 })();

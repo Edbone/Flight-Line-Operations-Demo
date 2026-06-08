@@ -1,4 +1,5 @@
 import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { demoTuitionPayments } from "./demo-data.js";
 import {
   escapeHtml,
   formatCurrency,
@@ -40,27 +41,11 @@ let sortState = { key: "studentName", direction: "asc" };
 
 async function loadPayments() {
   const loaded = await loadCollectionData(STORAGE_COLLECTION, TUITION_STORAGE_KEY);
-  if (Array.isArray(loaded) && loaded.length > 0) return loaded.map((record) => normalizeTuitionRecord(record));
-
-  const fallback = await loadPaymentsFromApi();
-  return fallback.map((record) => normalizeTuitionRecord(record));
-}
-
-async function loadPaymentsFromApi() {
-  try {
-    const response = await fetch("/api/tuition-payments");
-    if (!response.ok) throw new Error(`Tuition API returned ${response.status}`);
-    const data = await response.json();
-    return Array.isArray(data.items) ? data.items : [];
-  } catch (error) {
-    console.warn("Tuition API fallback failed", error);
-    return [];
-  }
+  const source = Array.isArray(loaded) && loaded.length > 0 ? loaded : demoTuitionPayments;
+  return source.map((record) => normalizeTuitionRecord(record));
 }
 
 async function savePayments() {
-  // Firebase is the production-ready path already available in this repo.
-  // localStorage is only a development/demo fallback and is not secure for student financial records.
   localStorage.setItem(TUITION_STORAGE_KEY, JSON.stringify(payments));
   await saveCollectionData(STORAGE_COLLECTION, payments);
 }

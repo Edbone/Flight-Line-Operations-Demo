@@ -1,11 +1,13 @@
 import { loadCollectionData } from "./firebase.js";
+import { demoNotes } from "./demo-data.js";
 
 const HOME_NOTES_STORAGE_KEY = "aoa-staff-notes-v1";
 const homeNotesList = document.querySelector("#home-notes-list");
 const homeNotesEmpty = document.querySelector("#home-notes-empty");
 
 async function loadHomeNotes() {
-  return await loadCollectionData("notes", HOME_NOTES_STORAGE_KEY);
+  const loaded = await loadCollectionData("notes", HOME_NOTES_STORAGE_KEY);
+  return Array.isArray(loaded) && loaded.length > 0 ? loaded : demoNotes;
 }
 
 function escapeHomeNoteHtml(value = "") {
