@@ -3,14 +3,14 @@
   --bg: #f4f6f9;
   --surface: #ffffff;
   --surface-2: #f7f8fa;
-  --text: #17213c;
-  --muted: #647084;
-  --navy: #17245d;
-  --navy-2: #223475;
-  --accent: #213474;
-  --accent-strong: #e2ad22;
+  --text: #000000;
+  --muted: #4b5563;
+  --navy: #000000;
+  --navy-2: #111111;
+  --accent: #00b7ff;
+  --accent-strong: #00b7ff;
   --border: #e2e6ec;
-  --shadow: 0 8px 24px rgba(22, 34, 72, 0.07);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
   --radius: 14px;
 }
 
@@ -51,7 +51,7 @@ body.auth-locked > :not(.login-gate) {
   place-items: center;
   padding: 24px;
   background:
-    radial-gradient(circle at top left, rgba(226, 173, 34, 0.18), transparent 34%),
+    radial-gradient(circle at top left, rgba(0, 183, 255, 0.18), transparent 34%),
     linear-gradient(135deg, #f4f6f9 0%, #e9edf5 100%);
 }
 
@@ -61,7 +61,7 @@ body.auth-locked > :not(.login-gate) {
   border: 1px solid var(--border);
   border-radius: 12px;
   background: var(--surface);
-  box-shadow: 0 24px 60px rgba(22, 34, 72, 0.18);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
 }
 
 .login-card img {
@@ -104,7 +104,7 @@ body.auth-locked > :not(.login-gate) {
 }
 
 .login-card input:focus {
-  outline: 3px solid rgba(226, 173, 34, 0.28);
+  outline: 3px solid rgba(0, 183, 255, 0.28);
   border-color: var(--accent-strong);
 }
 
@@ -174,7 +174,7 @@ body.auth-locked > :not(.login-gate) {
   align-items: center;
   padding: 12px 18px;
   border-radius: 999px;
-  background: rgba(59, 130, 246, 0.12);
+  background: rgba(0, 183, 255, 0.12);
   color: var(--accent);
   text-decoration: none;
   font-weight: 600;
@@ -409,7 +409,7 @@ button {
   line-height: 1.2;
 }
 
-.metric-blue { --metric-color: #0ea5e9; }
+.metric-blue { --metric-color: #00b7ff; }
 .metric-green { --metric-color: #10b981; }
 .metric-yellow { --metric-color: #f59e0b; }
 .metric-red { --metric-color: #ef4444; }
@@ -1713,7 +1713,7 @@ button {
 }
 
 .day-column.drag-over {
-  background: #eef2fb;
+  background: rgba(0, 183, 255, 0.08);
   box-shadow: inset 0 0 0 2px var(--navy-2);
 }
 
@@ -1736,7 +1736,7 @@ button {
 }
 
 .calendar-slot:hover {
-  background: rgba(33, 52, 116, 0.035);
+  background: rgba(0, 0, 0, 0.035);
 }
 
 .calendar-booking {
@@ -1747,12 +1747,12 @@ button {
   display: block;
   overflow: hidden;
   padding: 6px 10px;
-  border: 1px solid rgba(25, 40, 92, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.18);
   border-left-width: 4px;
   border-radius: 7px;
-  background: #e9edf8;
-  box-shadow: 0 2px 5px rgba(22, 34, 72, 0.11);
-  color: var(--navy);
+  background: #f2f4f7;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.11);
+  color: var(--text);
   cursor: grab;
   text-align: left;
   touch-action: none;
@@ -1763,7 +1763,7 @@ button {
 .calendar-booking:hover {
   z-index: 5;
   transform: translateY(-1px);
-  box-shadow: 0 7px 16px rgba(22, 34, 72, 0.18);
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.18);
 }
 
 .calendar-booking:active {
@@ -1774,7 +1774,7 @@ button {
   z-index: 20;
   opacity: 0.72;
   transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 12px 26px rgba(22, 34, 72, 0.24);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.24);
 }
 
 .calendar-booking .booking-resize-handle {
@@ -1785,12 +1785,12 @@ button {
   width: 24px;
   height: 8px;
   border-radius: 999px;
-  background: rgba(34, 51, 85, 0.22);
+  background: rgba(0, 0, 0, 0.22);
   cursor: ns-resize;
 }
 
 .calendar-booking.resizing {
-  box-shadow: 0 8px 20px rgba(22, 34, 72, 0.22);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
 }
 
 .calendar-booking strong,
