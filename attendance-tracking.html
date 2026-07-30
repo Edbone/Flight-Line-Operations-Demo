@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Live MyFBO attendance tracking for AOA students." />
+  <title>Attendance Tracking - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-attendance-page>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+
+  <main class="tracker-page attendance-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow">MyFBO Sync</span>
+        <h1>Attendance tracking</h1>
+        <p>Latest per-student attendance results from the daily server-side sync.</p>
+      </div>
+    </header>
+    <nav class="student-tabs" aria-label="Student app views"><a href="students.html">Home</a><a href="availability.html">Availability</a><a href="alerts.html">Alerts</a><a class="active" href="attendance-tracking.html">Attendance</a><a href="student-import.html">Import</a></nav>
+
+    <section class="attendance-update-banner" id="attendance-update-banner" aria-live="polite">
+      <strong>Student attendance last ran --</strong>
+      <span>Loading scrape status...</span>
+    </section>
+
+    <section class="metric-grid attendance-metric-grid" aria-label="Attendance summary">
+      <article class="metric-card metric-green">
+        <span>Good</span>
+        <strong id="attendance-good-count">0</strong>
+        <small>90% attendance or higher</small>
+      </article>
+      <article class="metric-card metric-yellow">
+        <span>Caution</span>
+        <strong id="attendance-caution-count">0</strong>
+        <small>80% to 89.9%</small>
+      </article>
+      <article class="metric-card metric-red">
+        <span>Needs attention</span>
+        <strong id="attendance-attention-count">0</strong>
+        <small>Below 80%</small>
+      </article>
+      <article class="metric-card metric-blue">
+        <span>Sync errors</span>
+        <strong id="attendance-error-count">0</strong>
+        <small>Students with non-ok status</small>
+      </article>
+    </section>
+
+    <section class="tracker-panel attendance-panel">
+      <div class="tracker-toolbar attendance-toolbar">
+        <div class="filter-group">
+          <label class="search-field">
+            <span class="sr-only">Search attendance records</span>
+            <input id="attendance-search" type="search" placeholder="Search student, status, or error..." />
+          </label>
+          <label>
+            <span class="sr-only">Filter by attendance warning</span>
+            <select id="attendance-warning-filter">
+              <option value="">All warnings</option>
+              <option value="attention">Needs attention</option>
+              <option value="caution">Caution</option>
+              <option value="good">Good</option>
+              <option value="error">Sync errors</option>
+            </select>
+          </label>
+        </div>
+        <p id="attendance-result-count" class="result-count"></p>
+      </div>
+
+      <div class="attendance-state" id="attendance-loading-state">
+        <strong>Loading attendance data...</strong>
+        <p>Reading attendanceLatest from Firestore.</p>
+      </div>
+      <div class="attendance-state attendance-state-error" id="attendance-error-state" hidden>
+        <strong>Attendance data could not load</strong>
+        <p id="attendance-error-message"></p>
+      </div>
+
+      <div class="tracker-table-wrap">
+        <table class="tracker-table attendance-table">
+          <thead>
+            <tr>
+              <th><button type="button" data-sort="studentName">Student name</button></th>
+              <th><button type="button" data-sort="attendanceRate">Attendance rate</button></th>
+              <th><button type="button" data-sort="completedTotal">Completed total</button></th>
+              <th><button type="button" data-sort="avoidableCancellations">Avoidable cancellations</button></th>
+              <th><button type="button" data-sort="weatherMaintenance">Weather / maintenance</button></th>
+              <th><button type="button" data-sort="excludedBlocks">Excluded / unrecognized</button></th>
+              <th><button type="button" data-sort="status">Status / error</button></th>
+              <th><button type="button" data-sort="updatedAt">Last updated</button></th>
+            </tr>
+          </thead>
+          <tbody id="attendance-table-body"></tbody>
+        </table>
+        <div class="empty-state" id="attendance-empty-state" hidden>
+          <strong>No attendance records found</strong>
+          <p>Try another search or confirm the daily sync has written attendanceLatest documents.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="attendance-tracking.js"></script>
+</body>
+</html>

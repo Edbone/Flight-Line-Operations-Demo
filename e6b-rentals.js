@@ -1,32 +1,32 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
 
 const RENTAL_STORAGE_KEY = "aoa-e6b-rentals-v1";
 const INVENTORY = ["1", "2", "3", "4", "5"];
 const OVERDUE_DAYS = 14;
 
 const seedRentals = [
-  { id: "r-1", name: "John Basso", e6bNumber: "1", checkoutDate: "2024-12-12", returnDate: "2024-12-15", notes: "" },
-  { id: "r-2", name: "Evan Knapstead", e6bNumber: "2", checkoutDate: "2023-12-12", returnDate: "2025-02-03", notes: "" },
-  { id: "r-3", name: "Ahmed Salami", e6bNumber: "2", checkoutDate: "2025-02-08", returnDate: "2025-02-10", notes: "" },
-  { id: "r-4", name: "Gabrielle Weir", e6bNumber: "4", checkoutDate: "2025-02-17", returnDate: "2025-02-20", notes: "" },
-  { id: "r-5", name: "Savannah Strasberg", e6bNumber: "2", checkoutDate: "2025-06-10", returnDate: "2025-06-27", notes: "" },
-  { id: "r-6", name: "Tyler Diaz", e6bNumber: "4", checkoutDate: "2025-06-11", returnDate: "2025-08-26", notes: "" },
-  { id: "r-7", name: "Nanette Disla", e6bNumber: "1", checkoutDate: "2025-06-19", returnDate: "2025-08-12", notes: "" },
-  { id: "r-8", name: "Celine Rivera", e6bNumber: "5", checkoutDate: "2025-06-23", returnDate: "2025-06-24", notes: "" },
-  { id: "r-9", name: "Daniel Weis", e6bNumber: "2", checkoutDate: "2025-07-01", returnDate: "2025-07-04", notes: "" },
-  { id: "r-10", name: "Daniel Weis", e6bNumber: "2", checkoutDate: "2025-07-04", returnDate: "2025-07-10", notes: "" },
-  { id: "r-11", name: "Elise Phillips", e6bNumber: "2", checkoutDate: "2025-08-13", returnDate: "2025-08-26", notes: "" },
-  { id: "r-12", name: "Judson Hershiser", e6bNumber: "1", checkoutDate: "2025-08-26", returnDate: "2025-08-28", notes: "" },
-  { id: "r-13", name: "Chase Harden", e6bNumber: "2", checkoutDate: "2025-08-26", returnDate: "2025-08-27", notes: "" },
-  { id: "r-14", name: "Eddie Jackson", e6bNumber: "2", checkoutDate: "2025-10-04", returnDate: "2025-10-06", notes: "" },
-  { id: "r-15", name: "Edwin Melendez", e6bNumber: "2", checkoutDate: "2025-10-06", returnDate: "2025-10-06", notes: "" },
-  { id: "r-16", name: "Edwin Melendez", e6bNumber: "1", checkoutDate: "2025-10-08", returnDate: "2025-10-08", notes: "" },
-  { id: "r-17", name: "Landon", e6bNumber: "1", checkoutDate: "2025-10-10", returnDate: "", notes: "" },
-  { id: "r-18", name: "Johnathan Ahern", e6bNumber: "2", checkoutDate: "2025-10-18", returnDate: "", notes: "" },
-  { id: "r-19", name: "Will Wood", e6bNumber: "", checkoutDate: "2025-11-18", returnDate: "", notes: "E6B number not recorded." },
-  { id: "r-20", name: "Cristian Feliz", e6bNumber: "5", checkoutDate: "2026-01-09", returnDate: "", notes: "" },
-  { id: "r-21", name: "Eddie Jackson", e6bNumber: "2", checkoutDate: "2026-01-12", returnDate: "2026-01-16", notes: "" },
-  { id: "r-22", name: "Eddie Jackson", e6bNumber: "1", checkoutDate: "2026-01-22", returnDate: "2026-01-26", notes: "" }
+  { id: "r-1", name: "Hazel Rivera", e6bNumber: "1", checkoutDate: "2024-12-12", returnDate: "2024-12-15", notes: "" },
+  { id: "r-2", name: "Elias Brooks", e6bNumber: "2", checkoutDate: "2023-12-12", returnDate: "2025-02-03", notes: "" },
+  { id: "r-3", name: "Ari Lane", e6bNumber: "2", checkoutDate: "2025-02-08", returnDate: "2025-02-10", notes: "" },
+  { id: "r-4", name: "Nora Sullivan", e6bNumber: "4", checkoutDate: "2025-02-17", returnDate: "2025-02-20", notes: "" },
+  { id: "r-5", name: "Cole Barrett", e6bNumber: "2", checkoutDate: "2025-06-10", returnDate: "2025-06-27", notes: "" },
+  { id: "r-6", name: "Sienna Hughes", e6bNumber: "4", checkoutDate: "2025-06-11", returnDate: "2025-08-26", notes: "" },
+  { id: "r-7", name: "Mateo Ellis", e6bNumber: "1", checkoutDate: "2025-06-19", returnDate: "2025-08-12", notes: "" },
+  { id: "r-8", name: "Audrey Wells", e6bNumber: "5", checkoutDate: "2025-06-23", returnDate: "2025-06-24", notes: "" },
+  { id: "r-9", name: "Theo Grant", e6bNumber: "2", checkoutDate: "2025-07-01", returnDate: "2025-07-04", notes: "" },
+  { id: "r-10", name: "Theo Grant", e6bNumber: "2", checkoutDate: "2025-07-04", returnDate: "2025-07-10", notes: "" },
+  { id: "r-11", name: "Gavin Stone", e6bNumber: "2", checkoutDate: "2025-08-13", returnDate: "2025-08-26", notes: "" },
+  { id: "r-12", name: "Selena Ford", e6bNumber: "1", checkoutDate: "2025-08-26", returnDate: "2025-08-28", notes: "" },
+  { id: "r-13", name: "Parker Kim", e6bNumber: "2", checkoutDate: "2025-08-26", returnDate: "2025-08-27", notes: "" },
+  { id: "r-14", name: "Naomi Chase", e6bNumber: "2", checkoutDate: "2025-10-04", returnDate: "2025-10-06", notes: "" },
+  { id: "r-15", name: "Rowan Miles", e6bNumber: "2", checkoutDate: "2025-10-06", returnDate: "2025-10-06", notes: "" },
+  { id: "r-16", name: "Rowan Miles", e6bNumber: "1", checkoutDate: "2025-10-08", returnDate: "2025-10-08", notes: "" },
+  { id: "r-17", name: "Leah Carter", e6bNumber: "1", checkoutDate: "2025-10-10", returnDate: "", notes: "" },
+  { id: "r-18", name: "Adrian Blake", e6bNumber: "2", checkoutDate: "2025-10-18", returnDate: "", notes: "" },
+  { id: "r-19", name: "Maya Chen", e6bNumber: "", checkoutDate: "2025-11-18", returnDate: "", notes: "E6B number not recorded." },
+  { id: "r-20", name: "Talia Reed", e6bNumber: "5", checkoutDate: "2026-01-09", returnDate: "", notes: "" },
+  { id: "r-21", name: "Naomi Chase", e6bNumber: "2", checkoutDate: "2026-01-12", returnDate: "2026-01-16", notes: "" },
+  { id: "r-22", name: "Naomi Chase", e6bNumber: "1", checkoutDate: "2026-01-22", returnDate: "2026-01-26", notes: "" }
 ];
 
 const rows = document.querySelector("#rental-rows");
@@ -42,9 +42,10 @@ async function loadRentals() {
   return Array.isArray(loaded) && loaded.length > 0 ? loaded : seedRentals;
 }
 
-async function saveRentals() {
-  localStorage.setItem(RENTAL_STORAGE_KEY, JSON.stringify(rentals));
-  await saveCollectionData("e6b-rentals", rentals);
+async function saveRentals(options = {}) {
+  cacheLocalData(RENTAL_STORAGE_KEY, rentals);
+  rentals = await saveCollectionData("e6b-rentals", rentals, options);
+  cacheLocalData(RENTAL_STORAGE_KEY, rentals);
 }
 
 function todayLocal() {
@@ -174,7 +175,7 @@ rows.addEventListener("click", (event) => {
   }
   if (deleteId && confirm("Delete this rental record?")) {
     rentals = rentals.filter((rental) => rental.id !== deleteId);
-    saveRentals();
+    saveRentals({ allowDeletes: true });
     render();
   }
 });

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Staff dashboard for SAP Matrix milestones and training alerts." />
+  <title>SAP Milestone Dashboard - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="master-schedule.html">Master Schedule</a><a href="stage-checks.html">Stage Checks</a><a href="written-tests.html">Written Test Tracking</a></nav></header>
+  <main class="student-page sap-page">
+    <header class="tracker-header"><div><span class="eyebrow tuition-eyebrow">Dispatcher Watch</span><h1>SAP milestone dashboard</h1><p>Upcoming, missing, at-risk, overdue, and completed training milestones across all students.</p></div><div class="controls"><a class="button primary" href="sap-import.html">Import SAP Matrix</a><a class="button quiet" href="students.html">Students</a></div></header>
+    <section class="metric-grid sap-metric-grid" id="sap-dashboard-metrics"></section>
+    <section class="student-panel sap-filter-panel"><div class="sap-dashboard-filters">
+      <label>Campus<select data-sap-filter="campus"><option value="">All campuses</option></select></label>
+      <label>Instructor<select data-sap-filter="instructor"><option value="">All instructors</option></select></label>
+      <label>Student<select data-sap-filter="student"><option value="">All students</option></select></label>
+      <label>Course<select data-sap-filter="course"><option value="">All courses</option></select></label>
+      <label>Milestone type<select data-sap-filter="type"><option value="">All types</option></select></label>
+      <label>Alert level<select data-sap-filter="priority"><option value="">All levels</option><option>critical</option><option>high</option><option>medium</option><option>informational</option></select></label>
+      <label>Status<select data-sap-filter="status"><option value="">Complete and incomplete</option><option value="incomplete">Incomplete</option><option value="completed">Completed</option></select></label>
+      <label>Written readiness<select data-sap-filter="ready"><option value="">Ready or not ready</option><option value="ready">Ready</option><option value="not_ready">Not ready</option></select></label>
+    </div></section>
+    <section class="sap-dashboard-layout"><div><div class="student-panel-heading"><h2>Milestone alerts</h2><span id="sap-alert-count"></span></div><div class="sap-dashboard-alerts" id="sap-dashboard-alerts"></div></div><aside class="student-side-panel"><section class="student-panel"><div class="student-panel-heading"><h2>Recent notifications</h2></div><div id="sap-notification-list"></div></section><section class="student-panel"><div class="student-panel-heading"><h2>Import review</h2></div><div id="sap-import-review-list"></div></section><section class="student-panel"><div class="student-panel-heading"><h2>Alert guide</h2></div><div class="sap-alert-guide"><span class="sap-priority-dot critical"></span><b>Critical</b><small>Overdue or due today</small><span class="sap-priority-dot high"></span><b>High</b><small>Within 7 days or key prerequisite missing</small><span class="sap-priority-dot medium"></span><b>Medium</b><small>Within 14 days or readiness below target</small><span class="sap-priority-dot informational"></span><b>Information</b><small>Within 30 days, upcoming, or complete</small></div></section></aside></section>
+  </main>
+  <script type="module" src="sap-dashboard.js"></script>
+</body>
+</html>

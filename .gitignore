@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+node_modules/
+data/attendance-*.json
+!data/.gitkeep
+server/attendance-sync/data/*.json
+server/attendance-sync/data/backups/*.json
+npm-debug.log*
+.DS_Store
+.vercel

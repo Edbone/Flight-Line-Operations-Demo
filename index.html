@@ -3,41 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Flight Line Operations Demo showcasing dispatch-style tools and operational workflows." />
-  <title>Flight Line Operations Demo</title>
-  <link rel="icon" type="image/png" href="ekwx-logo.png" />
+  <meta name="description" content="Academy of Aviation operational resources and staff tools." />
+  <title>KORL Dispatch Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
   <script>document.documentElement.classList.add("auth-checking");</script>
   <link rel="stylesheet" href="styles.css" />
   <script src="auth.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html" aria-label="Flight Line Operations Demo home">
-      <img src="ekwx-logo-1.png" alt="Flight Line Operations Demo" />
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home">
+      <img src="assets/aoa-logo.png" alt="Academy of Aviation" />
     </a>
-    <nav class="main-nav" aria-label="Main navigation">
-      <a class="active" href="index.html">Home</a>
-      <a href="sheet1.html">VR Trainers</a>
-      <a href="stage-checks.html">Stage Checks</a>
-      <a href="notes.html">Notes</a>
-      <a href="maintenance.html">Maintenance</a>
-      <a href="tuition-tracking.html">Tuition Tracking</a>
-      <details class="nav-more">
-        <summary>Spreadsheets</summary>
-        <div class="nav-more-menu">
-          <a href="written-tests.html">Written Tests</a>
-          <a href="oil-tracker.html">Oil Tracker</a>
-          <a href="e6b-rentals.html">E6B Rentals</a>
-          <a href="fuel-discrepancies.html">Fuel Reports</a>
-        </div>
-      </details>
-    </nav>
+    <nav class="main-nav" aria-label="Main navigation"><a class="active" href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
   </header>
 
   <main class="page-shell home-page">
     <div class="home-dashboard">
       <section class="home-title-hero">
-        <h1>Flight Line Operations Demo</h1>
+        <div>
+          <h1>KORL Operations</h1>
+        </div>
+        <time id="home-today" datetime=""></time>
+      </section>
+
+      <section class="home-ops-panel" aria-labelledby="home-ops-title">
+        <div class="home-panel-heading">
+          <div>
+            <span class="section-label">Operational Heads Up</span>
+            <h2 id="home-ops-title">Dispatch watch</h2>
+          </div>
+          <a href="students.html">Open students</a>
+        </div>
+        <div class="home-ops-metrics" aria-label="Operations summary">
+          <article><span>Spin alerts</span><strong id="home-spin-alert-count">0</strong></article>
+          <article><span>Active students</span><strong id="home-active-student-count">0</strong></article>
+          <article><span>Student watch</span><strong id="home-student-watch-count">0</strong></article>
+        </div>
+        <div class="home-ops-split">
+          <section class="home-alert-box" aria-labelledby="home-spin-title">
+            <div class="home-mini-heading">
+              <h3 id="home-spin-title">Spin training events</h3>
+              <div class="home-mini-actions">
+                <span>7 day lookahead</span>
+                <button class="home-add-button" id="open-spin-event-dialog" type="button" aria-label="Add spin training event">+ Add</button>
+              </div>
+            </div>
+            <div class="home-alert-list" id="home-spin-alert-list" aria-live="polite"></div>
+          </section>
+          <section class="home-alert-box" aria-labelledby="home-watch-title">
+            <div class="home-mini-heading">
+              <h3 id="home-watch-title">Student watch</h3>
+              <span>Highest priority</span>
+            </div>
+            <div class="home-alert-list" id="home-student-watch-list" aria-live="polite"></div>
+          </section>
+        </div>
       </section>
 
       <section class="home-notes-panel" aria-labelledby="home-notes-title">
@@ -55,57 +76,83 @@
         </div>
       </section>
 
-      <section class="embed-card home-maintenance-card" aria-label="Maintenance tracker preview">
-        <header>
+      <section class="home-test-room-panel" aria-labelledby="home-test-room-title">
+        <div class="home-test-room-heading">
           <div>
-            <span class="embed-card-label">Fleet Operations</span>
-            <strong>Maintenance Tracker</strong>
+            <span class="section-label">Flight Test Room</span>
+            <h2 id="home-test-room-title">Room calendar</h2>
           </div>
-          <a class="home-embed-link" href="maintenance.html">Open page</a>
-        </header>
-        <iframe
-          src="https://maintenance.aoadispatch.com/dashboard"
-          title="AOA Maintenance Tracking Dashboard Preview"
-          loading="lazy"
-          referrerpolicy="strict-origin-when-cross-origin"
-          allowfullscreen
-        ></iframe>
+          <div class="home-calendar-controls">
+            <button class="icon-control" id="test-room-prev-month" type="button" aria-label="Previous month">‹</button>
+            <strong id="test-room-month-label"></strong>
+            <button class="icon-control" id="test-room-next-month" type="button" aria-label="Next month">›</button>
+          </div>
+        </div>
+        <div class="home-room-calendar" id="test-room-calendar" aria-live="polite"></div>
       </section>
+
+      <section class="home-room-metrics-panel" aria-labelledby="home-room-metrics-title">
+        <header class="home-room-metrics-heading">
+          <div>
+            <span class="section-label">Room Status</span>
+            <h2 id="home-room-metrics-title">Test room snapshot</h2>
+          </div>
+        </header>
+        <div class="home-room-metrics-grid" aria-live="polite">
+          <article>
+            <span>Today</span>
+            <strong id="test-room-today-count">0</strong>
+            <small id="test-room-today-detail">No bookings today</small>
+          </article>
+          <article>
+            <span>This week</span>
+            <strong id="test-room-week-count">0</strong>
+            <small id="test-room-week-detail">No bookings this week</small>
+          </article>
+          <article>
+            <span>Next booking</span>
+            <strong id="test-room-next-time">Open</strong>
+            <small id="test-room-next-detail">No upcoming bookings</small>
+          </article>
+          <article>
+            <span>Next open slot</span>
+            <strong id="test-room-open-time">Now</strong>
+            <small id="test-room-open-detail">Available today</small>
+          </article>
+        </div>
+      </section>
+
     </div>
 
     <section class="live-operations home-live-grid" aria-label="Live operations">
-        <article class="embed-card flight-line-status-card">
-          <header>
-            <div>
-              <span class="embed-card-label">Live Operations</span>
-              <strong id="live-operations-title">Flight Line Status</strong>
-            </div>
-            <div class="embed-header-status">
-              <span class="live-indicator"><i></i>Live</span>
-              <span class="flight-status-updated" id="flight-status-updated">Loading...</span>
-            </div>
-          </header>
-          <div class="home-metar">
-            <span>METAR</span>
-            <strong id="home-raw-metar">Loading current KORL weather...</strong>
-          </div>
-          <div class="home-flight-status" aria-live="polite">
-            <div class="home-status-head"><span>Flight Profile</span><span>Conditions</span><span>Status</span></div>
-            <div id="home-status-table"></div>
-          </div>
-        </article>
-
         <article class="embed-card weather-embed">
           <header>
             <div><span class="embed-card-label">Live Operations</span><strong>Weather Radar</strong></div>
-            <a href="https://wx.ekaviates.com/" target="_blank" rel="noopener noreferrer">Open full page</a>
+            <span>Sample display</span>
           </header>
           <iframe
-            src="https://wx.ekaviates.com/"
+            srcdoc="<style>body{margin:0;display:grid;place-items:center;height:100vh;background:#071b36;color:#fff;font:700 18px Arial;text-align:center}small{display:block;margin-top:8px;color:#9fb5d1;font-weight:400}</style><div>Weather radar preview<small>Live weather is disabled in the portfolio demo.</small></div>"
             title="EK Aviates Weather Radar"
             loading="lazy"
             referrerpolicy="strict-origin-when-cross-origin"
             allow="geolocation"
+          ></iframe>
+        </article>
+
+        <article class="embed-card home-maintenance-card" aria-label="Maintenance tracker preview">
+          <header>
+            <div>
+              <span class="embed-card-label">Fleet Operations</span>
+              <strong>Maintenance Tracker</strong>
+            </div>
+            <a class="home-embed-link" href="maintenance.html">Open page</a>
+          </header>
+          <iframe
+            src="https://maintenance.aoadispatch.com/dashboard"
+            title="AOA Maintenance Tracking Dashboard Preview"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
           ></iframe>
         </article>
     </section>
@@ -120,6 +167,21 @@
       <div class="tool-grid">
         <a class="tool-card" href="sheet1.html">
           <span class="tool-card-copy"><strong>Ground Trainers</strong></span>
+        </a>
+        <a class="tool-card" href="ground-attendance.html">
+          <span class="tool-card-copy"><strong>Ground Attendance</strong></span>
+        </a>
+        <a class="tool-card" href="tv-screens.html">
+          <span class="tool-card-copy"><strong>TV Screens</strong></span>
+        </a>
+        <a class="tool-card" href="students.html">
+          <span class="tool-card-copy"><strong>Students</strong></span>
+        </a>
+        <a class="tool-card" href="instructors.html">
+          <span class="tool-card-copy"><strong>Instructors</strong></span>
+        </a>
+        <a class="tool-card" href="master-schedule.html">
+          <span class="tool-card-copy"><strong>Master Schedule</strong></span>
         </a>
         <a class="tool-card" href="stage-checks.html">
           <span class="tool-card-copy"><strong>Stage Check Tracker</strong></span>
@@ -149,9 +211,103 @@
     </section>
   </main>
 
-  <footer class="site-footer"><span>Flight Line Operations Demo</span><span>Portfolio Showcase</span></footer>
+  <dialog class="request-dialog home-spin-dialog" id="spin-event-dialog">
+    <form id="spin-event-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Spin Training</span>
+          <h2>Add spin training event</h2>
+        </div>
+        <button class="icon-button" id="close-spin-event-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="home-spin-form-grid">
+        <label>Student
+          <select id="spin-event-student" name="studentId" required></select>
+        </label>
+        <label>Date
+          <input id="spin-event-date" name="spinTrainingDueDate" type="date" required />
+        </label>
+        <label>Time
+          <input id="spin-event-time" name="spinTrainingTime" type="time" required />
+        </label>
+      </div>
+      <p class="home-spin-dialog-message" id="spin-event-message" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-spin-event-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save event</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog test-room-dialog" id="test-room-dialog">
+    <form id="test-room-form" method="dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Flight Test Room</span>
+          <h2 id="test-room-dialog-title">Book test room</h2>
+        </div>
+        <button class="icon-button" id="close-test-room-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <input name="bookingId" type="hidden" />
+      <div class="form-grid">
+        <label class="full-field">Name or test
+          <input name="title" required placeholder="Student, group, or test" />
+        </label>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Start time <input name="startTime" type="time" min="06:00" max="21:30" step="900" required /></label>
+        <label>How long
+          <select name="duration" required>
+            <option value="0.5">30 minutes</option>
+            <option value="1">1 hour</option>
+            <option value="1.5">1.5 hours</option>
+            <option value="2">2 hours</option>
+            <option value="3">3 hours</option>
+            <option value="4">4 hours</option>
+          </select>
+        </label>
+        <label>Notes <input name="notes" placeholder="Optional" /></label>
+      </div>
+      <p class="booking-message" id="test-room-message" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="button danger-button" id="delete-test-room-booking" type="button" hidden>Delete booking</button>
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-test-room-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save booking</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog test-room-day-dialog" id="test-room-day-dialog">
+    <div class="test-room-day-shell">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">Flight Test Room</span>
+          <h2 id="test-room-day-title">Day bookings</h2>
+        </div>
+        <button class="icon-button" id="close-test-room-day-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="test-room-day-list" id="test-room-day-list"></div>
+      <p class="booking-message" id="test-room-day-message" role="alert" hidden></p>
+      <div class="dialog-actions">
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-test-room-day-dialog" type="button">Close</button>
+        <button class="button primary" id="add-test-room-day-booking" type="button">Add booking</button>
+      </div>
+    </div>
+  </dialog>
+
+  <footer class="site-footer">
+    <span>Academy of Aviation</span>
+    <span class="site-footer-product">
+      <span>Staff Operations Hub</span>
+      <span class="app-version" id="app-version" title="Application version">v1.0.0</span>
+    </span>
+  </footer>
+  <script src="app-version.js" defer></script>
   <script type="module" src="firebase.js"></script>
-  <script src="home-flight-status.js"></script>
+  <script type="module" src="home-operations.js"></script>
   <script type="module" src="home-notes.js"></script>
+  <script type="module" src="home-test-room.js"></script>
 </body>
 </html>

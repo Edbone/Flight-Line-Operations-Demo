@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AOA instructor profiles shared across the operations hub." />
+  <title>Instructors - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-instructor-page>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a class="active" href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+  <main class="student-page instructor-page">
+    <header class="tracker-header">
+      <div><span class="eyebrow tuition-eyebrow">Staff Directory</span><h1>Instructors</h1><p>Shared instructor profiles for student assignments and scheduling tools.</p></div>
+      <div class="controls"><button class="button primary" id="new-instructor-button" type="button">New instructor</button></div>
+    </header>
+
+    <section class="student-toolbar instructor-toolbar">
+      <label class="search-field"><span class="sr-only">Search instructors</span><input id="instructor-search" type="search" placeholder="Search name, initials, email, role, notes..." /></label>
+      <select id="instructor-status-filter" aria-label="Instructor status filter">
+        <option value="Yes">Active instructors</option>
+        <option value="No">Inactive</option>
+        <option value="">All instructors</option>
+      </select>
+      <p id="instructor-result-count" class="result-count"></p>
+    </section>
+
+    <section class="metric-grid instructor-metric-grid" aria-label="Instructor summary">
+      <article class="metric-card metric-green"><span>Active</span><strong id="instructor-active-count">0</strong><small>Available in shared lists</small></article>
+      <article class="metric-card metric-yellow"><span>Check instructors</span><strong id="instructor-check-count">0</strong><small>Marked for progress checks</small></article>
+      <article class="metric-card metric-blue"><span>Total profiles</span><strong id="instructor-total-count">0</strong><small>Active and inactive</small></article>
+    </section>
+
+    <section class="student-home-layout instructor-layout">
+      <section class="student-panel instructor-directory-panel">
+        <div class="student-panel-heading"><h2>Instructor profiles</h2><span id="instructor-list-count"></span></div>
+        <div class="instructor-card-grid" id="instructor-card-grid"></div>
+        <div class="empty-state" id="instructor-empty" hidden><strong>No instructors found</strong></div>
+      </section>
+      <aside class="student-panel instructor-editor-panel">
+        <div class="student-panel-heading"><h2 id="instructor-form-title">Add instructor</h2></div>
+        <form class="student-form instructor-form" id="instructor-form">
+          <input type="hidden" name="id" />
+          <div class="student-form-grid">
+            <label class="wide-field">Name <input name="name" required /></label>
+            <label>Initials <input name="initials" /></label>
+            <label>Status
+              <select name="activeStatus"><option value="Yes">Active</option><option value="No">Inactive</option></select>
+            </label>
+            <label>Role <input name="role" placeholder="CFI, CFII, Check Instructor..." /></label>
+            <label>Aircraft <input name="aircraft" placeholder="C172" /></label>
+            <label>Email <input name="email" type="email" /></label>
+            <label>Phone <input name="phone" /></label>
+            <label class="instructor-check-field"><input name="checkInstructor" type="checkbox" /> Check instructor</label>
+            <label class="wide-field">Notes <textarea name="notes" rows="4"></textarea></label>
+          </div>
+          <div class="student-form-actions">
+            <button class="button danger-button" id="delete-instructor-button" type="button" hidden>Remove instructor</button>
+            <span class="dialog-action-spacer"></span>
+            <button class="button quiet" id="reset-instructor-form" type="button">Clear</button>
+            <button class="button primary" type="submit">Save instructor</button>
+          </div>
+        </form>
+      </aside>
+    </section>
+  </main>
+  <script type="module" src="instructors.js"></script>
+</body>
+</html>

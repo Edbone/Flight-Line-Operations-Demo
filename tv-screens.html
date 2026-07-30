@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Open office TV display screens in new windows." />
+  <title>TV Screens - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a class="active" href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+
+  <main class="tracker-page tv-screens-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow">Office Displays</span>
+        <h1>TV Screens</h1>
+        <p>Click any preview to open that TV display in a new window.</p>
+      </div>
+    </header>
+
+    <section class="tv-screen-grid" aria-label="TV screen links">
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Weather</span>
+          <h2>WX Radar</h2>
+        </div>
+        <a class="tv-screen-preview" href="index.html" aria-label="View the local operations preview">
+          <iframe src="about:blank" title="WX Radar preview disabled in portfolio mode" loading="lazy"></iframe>
+          <span>Demo preview only</span>
+        </a>
+      </article>
+
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Ground School</span>
+          <h2>Ground School Topics</h2>
+        </div>
+        <a class="tv-screen-preview" href="ground-school-topics-screen.html" aria-label="Open local Ground School Topics screen">
+          <iframe src="ground-school-topics-screen.html" title="Ground School Topics preview" loading="lazy"></iframe>
+          <span>Open local screen</span>
+        </a>
+      </article>
+
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Flight Line</span>
+          <h2>Flight Line Status</h2>
+        </div>
+        <a class="tv-screen-preview" href="index.html" aria-label="View local Flight Line Status sample">
+          <iframe src="index.html" title="Flight Line Status sample" loading="lazy"></iframe>
+          <span>Open local sample</span>
+        </a>
+      </article>
+
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Attendance</span>
+          <h2>AOA Attendance Calculator</h2>
+        </div>
+        <a class="tv-screen-preview" href="attendance-tracking.html" aria-label="Open local Attendance Tracking screen">
+          <iframe src="attendance-tracking.html" title="Attendance Tracking preview" loading="lazy"></iframe>
+          <span>Open local screen</span>
+        </a>
+      </article>
+
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Weather</span>
+          <h2>GFA CIG/VIS</h2>
+        </div>
+        <a class="tv-screen-preview" href="index.html" aria-label="View local weather sample">
+          <iframe src="about:blank" title="GFA preview disabled in portfolio mode" loading="lazy"></iframe>
+          <span>Demo preview only</span>
+        </a>
+      </article>
+
+      <article class="tv-screen-card">
+        <div class="tv-screen-copy">
+          <span class="section-label">Presentation</span>
+          <h2>Office Slides</h2>
+        </div>
+        <a class="tv-screen-preview" href="user-guide.html" aria-label="Open local user guide">
+          <iframe src="user-guide.html" title="Portfolio user guide preview" loading="lazy"></iframe>
+          <span>Open local guide</span>
+        </a>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

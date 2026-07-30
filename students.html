@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AOA student profiles and shared student dataset." />
+  <title>Students - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-student-page="students">
+  <header class="topbar">
+    <a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+  <main class="student-page">
+    <header class="tracker-header">
+      <div><span class="eyebrow tuition-eyebrow">Shared Dataset</span><h1>Students</h1><p>Add student profiles here once. Stage checks, tuition, ground trainers, and attendance can use this saved dataset for student dropdowns.</p></div>
+      <div class="controls"><a class="button primary" href="student-detail.html">New student</a><button class="button secondary" id="export-students" type="button">Export CSV</button><button class="button secondary" id="migrate-student-photos" type="button" hidden>Move photos to Storage</button></div>
+    </header>
+    <nav class="student-tabs"><a class="active" href="students.html">Home</a><a href="availability.html">Availability</a><a href="alerts.html">Alerts</a><a href="attendance-tracking.html">Attendance</a><a href="student-import.html">Import</a><a href="sap-dashboard.html">SAP Timeline</a></nav>
+    <section class="student-toolbar">
+      <label class="search-field"><span class="sr-only">Search students</span><input data-filter="search" type="search" placeholder="Search name, CFI, course, curriculum, notes..." /></label>
+      <div class="student-status-toggle" role="group" aria-label="Student status filter">
+        <button class="active" type="button" data-status-filter="Yes">Active roster</button>
+        <button type="button" data-status-filter="No">Inactive</button>
+        <button type="button" data-status-filter="">All</button>
+      </div>
+      <select class="priority-filter" id="filter-group" data-filter="group"><option value="">All groups</option></select>
+      <select id="filter-training" data-filter="trainingType"><option value="">All training</option></select>
+      <select id="filter-course" data-filter="course"><option value="">All courses</option></select>
+      <select id="filter-cfi" data-filter="cfi"><option value="">All CFIs</option></select>
+      <select id="filter-initials" data-filter="initials"><option value="">All initials</option></select>
+      <div class="student-view-toggle" role="group" aria-label="Student view">
+        <button class="active" type="button" data-student-view="cards">Cards</button>
+        <button type="button" data-student-view="table">Table</button>
+      </div>
+      <p id="student-result-count" class="result-count"></p>
+    </section>
+    <p class="student-photo-migration-status" id="student-photo-migration-status" role="status" aria-live="polite" hidden></p>
+    <section class="metric-grid student-metric-grid" id="student-dashboard-cards" aria-label="Student summary"></section>
+    <section class="student-home-layout" id="student-home-view">
+      <aside class="student-panel student-course-panel"><div class="student-panel-heading"><h2>Courses</h2><span id="student-course-count"></span></div><div id="students-by-course"></div></aside>
+      <section class="student-panel student-directory-panel"><div class="student-panel-heading"><h2>Student profiles</h2><span id="student-card-count"></span></div><p class="student-roster-note">Active roster is shown by default. Use Inactive to review archived students.</p><div id="student-course-sections"></div></section>
+    </section>
+    <section class="tracker-panel student-table-panel" id="student-table-view" hidden>
+      <div class="tracker-table-wrap">
+        <table class="tracker-table student-table">
+          <thead><tr>
+            <th class="sticky-name"><button type="button" data-sort="studentName">Student</button></th>
+            <th><button type="button" data-sort="activeStatus">Active</button></th>
+            <th><button type="button" data-sort="group">Group Priority</button></th>
+            <th><button type="button" data-sort="trainingType">Part</button></th>
+            <th><button type="button" data-sort="currentCourse">Course</button></th>
+            <th><button type="button" data-sort="assignedCFI">CFI</button></th>
+            <th><button type="button" data-sort="weeklyTotal">Weekly</button></th>
+            <th><button type="button" data-sort="myfboAttendance">MyFBO Attendance</button></th>
+            <th><button type="button" data-sort="groupGroundAttended">Ground</button></th>
+            <th>By</th><th>Last updated</th><th>Operations Notes</th>
+          </tr></thead>
+          <tbody id="student-table-body"></tbody>
+        </table>
+        <div class="empty-state" id="student-empty" hidden><strong>No students found</strong></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="student-app.js"></script>
+</body>
+</html>

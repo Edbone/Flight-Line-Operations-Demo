@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Import and export KORL student CSV data." />
+  <title>Student Import - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-student-page="import">
+  <header class="topbar"><a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav></header>
+  <main class="student-page">
+    <header class="tracker-header"><div><span class="eyebrow tuition-eyebrow">CSV Workflow</span><h1>Import / export</h1><p>Preview spreadsheet rows before saving. Real student data should come from CSV import or manual entry, not source code.</p></div><div class="controls"><button class="button secondary" id="export-students" type="button">Export cleaned CSV</button></div></header>
+    <nav class="student-tabs"><a href="students.html">Home</a><a href="availability.html">Availability</a><a href="alerts.html">Alerts</a><a href="attendance-tracking.html">Attendance</a><a class="active" href="student-import.html">Import</a></nav>
+    <section class="student-import-layout">
+      <article class="student-panel"><div class="student-panel-heading"><h2>CSV source</h2></div><label class="student-file-label">Choose CSV file<input id="student-csv-file" type="file" accept=".csv,text/csv" /></label><textarea id="student-csv-text" rows="14" spellcheck="false" placeholder="Paste CSV rows here..."></textarea></article>
+      <article class="student-panel"><div class="student-panel-heading"><h2>Preview</h2></div><div id="student-import-preview"></div></article>
+    </section>
+  </main>
+  <script type="module" src="student-app.js"></script>
+</body>
+</html>

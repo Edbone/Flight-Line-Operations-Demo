@@ -3,8 +3,7 @@ const HOME_STATUS_CONFIG = {
   tafAirport: "KMCO",
   refreshMs: 5 * 60 * 1000,
   airportLat: 28.5455,
-  airportLon: -81.3329,
-  proxyBase: "https://purple-sun-777e.bocajack03.workers.dev"
+  airportLon: -81.3329
 };
 
 const HOME_STATUS_RUNWAYS = { "07": 67, "25": 247, "13": 131, "31": 311 };
@@ -204,35 +203,16 @@ function sigmetIsActive(feature) {
   return (!Number.isFinite(start) || now >= start) && (!Number.isFinite(end) || now <= end);
 }
 
-async function fetchWeatherJson(path) {
-  const response = await fetch(`${HOME_STATUS_CONFIG.proxyBase}${path}`, {
-    headers: { Accept: "application/json" },
-    cache: "no-store"
-  });
-  if (!response.ok) throw new Error(`Weather service returned ${response.status}`);
-  return response.json();
-}
-
 async function loadHomeFlightStatus() {
-  const [metarJson, tafJson, sigmetJson] = await Promise.all([
-    fetchWeatherJson(`/api/data/metar?ids=${HOME_STATUS_CONFIG.airport}&format=json`),
-    fetchWeatherJson(`/api/data/taf?ids=${HOME_STATUS_CONFIG.tafAirport}&format=json`),
-    fetchWeatherJson("/api/data/airsigmet?format=geojson")
-  ]);
-  const metar = pickFirstRecord(metarJson);
-  const taf = pickFirstRecord(tafJson);
-  if (!metar) throw new Error("No KORL METAR available");
-
-  const airportPoint = [HOME_STATUS_CONFIG.airportLon, HOME_STATUS_CONFIG.airportLat];
-  homeStatusWeather.rawMetar = metar.rawOb || metar.raw_text || metar.raw || "No METAR available";
-  homeStatusWeather.receiptTime = metar.receiptTime || metar.observationTime || (typeof metar.obsTime === "number" ? new Date(metar.obsTime * 1000).toISOString() : new Date().toISOString());
-  homeStatusWeather.windDirection = (metar.wdir ?? metar.windDirection ?? metar.wind_dir_degrees) === "VRB" ? 0 : safeNumber(metar.wdir ?? metar.windDirection ?? metar.wind_dir_degrees, 0);
-  homeStatusWeather.windSpeed = safeNumber(metar.wspd ?? metar.windSpeed ?? metar.wind_speed_kt, 0);
-  homeStatusWeather.windGust = safeNumber(metar.wgst ?? metar.windGust ?? metar.wind_gust_kt, homeStatusWeather.windSpeed);
-  homeStatusWeather.visibility = (metar.visib ?? metar.visibility ?? metar.visibility_statute_mi) === "10+" ? 10 : safeNumber(metar.visib ?? metar.visibility ?? metar.visibility_statute_mi, 99);
-  homeStatusWeather.clouds = normalizeClouds(metar);
-  homeStatusWeather.tafHasGustsNextHour = tafHasGustsNextHour(taf);
-  homeStatusWeather.convectiveSigmetActive = (sigmetJson?.features || []).some((feature) => sigmetIsActive(feature) && pointInGeometry(airportPoint, feature.geometry));
+  homeStatusWeather.rawMetar = "KORL 301453Z 09008KT 10SM SCT035 29/22 A3005 · PORTFOLIO SAMPLE";
+  homeStatusWeather.receiptTime = new Date().toISOString();
+  homeStatusWeather.windDirection = 90;
+  homeStatusWeather.windSpeed = 8;
+  homeStatusWeather.windGust = 8;
+  homeStatusWeather.visibility = 10;
+  homeStatusWeather.clouds = [{ cover: "SCT", base: 3500 }];
+  homeStatusWeather.tafHasGustsNextHour = false;
+  homeStatusWeather.convectiveSigmetActive = false;
 }
 
 function renderHomeFlightStatus() {

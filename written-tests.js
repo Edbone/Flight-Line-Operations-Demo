@@ -1,10 +1,11 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
+import { SAP_CONFIG } from "./sap-core.mjs";
 
 const STORAGE_KEY = "aoa-written-test-custom-scores-v1";
 const DELETED_STUDENTS_KEY = "aoa-written-test-deleted-students-v1";
 const SCHEDULE_STORAGE_KEY = "aoa-written-test-schedule-v1";
-const SCORE_TARGET = 90;
-const STREAK_TARGET = 3;
+const SCORE_TARGET = SAP_CONFIG.readinessScore;
+const STREAK_TARGET = SAP_CONFIG.readinessAttempts;
 const SCHEDULE_START_HOUR = 8;
 const SCHEDULE_END_HOUR = 18;
 const SCHEDULE_SLOT_INCREMENT = 0.5;
@@ -39,9 +40,10 @@ async function loadCustomAttempts() {
   return Array.isArray(loaded) ? loaded : [];
 }
 
-async function saveCustomAttempts() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(customAttempts));
-  await saveCollectionData("written-test-custom", customAttempts);
+async function saveCustomAttempts(options = {}) {
+  cacheLocalData(STORAGE_KEY, customAttempts);
+  customAttempts = await saveCollectionData("written-test-custom", customAttempts, options);
+  cacheLocalData(STORAGE_KEY, customAttempts);
 }
 
 async function loadDeletedStudents() {
@@ -53,9 +55,10 @@ async function loadDeletedStudents() {
   }
 }
 
-async function saveDeletedStudents() {
-  localStorage.setItem(DELETED_STUDENTS_KEY, JSON.stringify(deletedStudents));
-  await saveCollectionData("written-test-deleted", deletedStudents);
+async function saveDeletedStudents(options = {}) {
+  cacheLocalData(DELETED_STUDENTS_KEY, deletedStudents);
+  deletedStudents = await saveCollectionData("written-test-deleted", deletedStudents, options);
+  cacheLocalData(DELETED_STUDENTS_KEY, deletedStudents);
 }
 
 async function loadScheduledTests() {
@@ -63,9 +66,12 @@ async function loadScheduledTests() {
   return Array.isArray(loaded) ? loaded : [];
 }
 
-async function saveScheduledTests() {
-  localStorage.setItem(SCHEDULE_STORAGE_KEY, JSON.stringify(scheduledTests));
-  await saveCollectionData("written-test-schedule", scheduledTests);
+async function saveScheduledTests(options = {}) {
+  cacheLocalData(SCHEDULE_STORAGE_KEY, scheduledTests);
+  const result = await saveCollectionData("written-test-schedule", scheduledTests, { ...options, returnStatus: true });
+  scheduledTests = Array.isArray(result.items) ? result.items : scheduledTests;
+  cacheLocalData(SCHEDULE_STORAGE_KEY, scheduledTests);
+  return Boolean(result.remoteSaved);
 }
 
 async function loadImportedAttempts() {
@@ -362,9 +368,23 @@ function showToast(message) {
   showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
 }
 
+function setSavingButton(button, saving) {
+  if (!button) return;
+  if (saving) {
+    button.dataset.originalText = button.textContent;
+    button.textContent = "Saving...";
+    button.disabled = true;
+  } else {
+    button.textContent = button.dataset.originalText || button.textContent;
+    button.disabled = false;
+    delete button.dataset.originalText;
+  }
+}
+
 function openForm() {
   form.reset();
   form.elements.date.value = new Date().toISOString().slice(0, 10);
+  form.elements.initials.value = window.AOAAuth?.getCurrentUserInitials?.() || "";
   dialog.showModal();
   form.elements.student.focus();
 }
@@ -374,6 +394,7 @@ function resetScheduleForm() {
   scheduleForm.elements.date.value = dateKey(scheduleMonthAnchor);
   scheduleForm.elements.time.value = "09:00";
   scheduleForm.elements.duration.value = "1";
+  scheduleForm.elements.initials.value = window.AOAAuth?.getCurrentUserInitials?.() || "";
 }
 
 function openBookingDialog() {
@@ -418,6 +439,11 @@ function openDayDialog(dateValue) {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form));
+  const staff = window.AOAAuth?.getCurrentUser?.();
+  if (!staff) {
+    showToast("Please sign in before adding a score.");
+    return;
+  }
   const takenAt = `${data.date}T${data.time || "12:00"}`;
   customAttempts.push({
     id: crypto.randomUUID(),
@@ -425,7 +451,11 @@ form.addEventListener("submit", (event) => {
     test: cleanTest(data.test),
     score: Number(data.score),
     takenAt,
-    initials: data.initials.trim().toUpperCase(),
+    initials: staff.initials,
+    recordedByUserId: staff.id,
+    recordedByName: staff.name,
+    recordedByInitials: staff.initials,
+    recordedAt: new Date().toISOString(),
     notes: data.notes.trim(),
     imported: false,
     order: Date.now()
@@ -436,9 +466,14 @@ form.addEventListener("submit", (event) => {
   showToast(Number(data.score) >= SCORE_TARGET ? "Passing score added." : "Score added. Streak reset.");
 });
 
-scheduleForm.addEventListener("submit", (event) => {
+scheduleForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(scheduleForm));
+  const staff = window.AOAAuth?.getCurrentUser?.();
+  if (!staff) {
+    showToast("Please sign in before saving a booking.");
+    return;
+  }
   const entry = {
     id: crypto.randomUUID(),
     student: cleanName(data.student),
@@ -446,12 +481,16 @@ scheduleForm.addEventListener("submit", (event) => {
     date: data.date,
     time: data.time,
     duration: Number(data.duration),
-    initials: data.initials.trim().toUpperCase(),
+    initials: staff.initials,
+    createdByUserId: staff.id,
+    createdByName: staff.name,
+    createdByInitials: staff.initials,
+    createdAt: new Date().toISOString(),
     notes: data.notes.trim()
   };
 
   if (!entry.student || !entry.test || !entry.date || !entry.time || !entry.initials) {
-    showToast("Student, test, date, time, and initials are required.");
+    showToast("Student, test, date, time, and staff login are required.");
     return;
   }
 
@@ -466,12 +505,25 @@ scheduleForm.addEventListener("submit", (event) => {
     return;
   }
 
+  const submitButton = event.submitter;
+  setSavingButton(submitButton, true);
   scheduledTests.push(entry);
-  saveScheduledTests();
-  scheduleMonthAnchor = startOfMonth(new Date(`${entry.date}T12:00:00`));
-  render();
-  bookingDialog.close();
-  showToast("Written test scheduled.");
+  try {
+    const remoteSaved = await saveScheduledTests();
+    scheduleMonthAnchor = startOfMonth(new Date(`${entry.date}T12:00:00`));
+    render();
+    if (remoteSaved) {
+      bookingDialog.close();
+      showToast("Written test scheduled.");
+    } else {
+      showToast("Saved on this device only. Database save failed.");
+    }
+  } catch (error) {
+    console.warn("Written-test booking save failed", error);
+    showToast("Saved on this device only. Database save failed.");
+  } finally {
+    setSavingButton(submitButton, false);
+  }
 });
 
 studentList.addEventListener("click", (event) => {
@@ -484,8 +536,8 @@ studentList.addEventListener("click", (event) => {
     customAttempts = customAttempts.filter((attempt) => studentKey(attempt.student) !== deletedKey);
     scheduledTests = scheduledTests.filter((entry) => studentKey(entry.student) !== deletedKey);
     saveDeletedStudents();
-    saveCustomAttempts();
-    saveScheduledTests();
+    saveCustomAttempts({ allowDeletes: true });
+    saveScheduledTests({ allowDeletes: true });
     render();
     showToast(`${student} deleted.`);
     return;
@@ -494,7 +546,7 @@ studentList.addEventListener("click", (event) => {
   const id = event.target.dataset.deleteScore;
   if (!id || !confirm("Delete this written test score?")) return;
   customAttempts = customAttempts.filter((attempt) => attempt.id !== id);
-  saveCustomAttempts();
+  saveCustomAttempts({ allowDeletes: true });
   render();
   showToast("Score deleted.");
 });
@@ -505,18 +557,18 @@ scheduleCalendar.addEventListener("click", (event) => {
 });
 dayDialogList.addEventListener("click", handleScheduleDelete);
 
-function handleScheduleDelete(event) {
+async function handleScheduleDelete(event) {
   const id = event.target.closest("[data-delete-schedule]")?.dataset.deleteSchedule;
   if (!id || !confirm("Delete this scheduled written test?")) return;
   scheduledTests = scheduledTests.filter((entry) => entry.id !== id);
-  saveScheduledTests();
+  const remoteSaved = await saveScheduledTests({ allowDeletes: true });
   render();
   if (dayDialog.open) {
     const openDate = dayDialogList.dataset.date;
     if (openDate && allScheduledTests().some((entry) => entry.date === openDate)) openDayDialog(openDate);
     else dayDialog.close();
   }
-  showToast("Scheduled written test deleted.");
+  showToast(remoteSaved ? "Scheduled written test deleted." : "Deleted on this device only. Database save failed.");
 }
 
 [searchInput, testFilter, statusFilter].forEach((element) => element.addEventListener("input", render));

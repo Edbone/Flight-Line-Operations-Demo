@@ -1,48 +1,49 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
+import { attachStudentNameDatalists, findStudentByName, getStudentDirectory } from "./student-directory.js";
 
 const STORAGE_KEY = "aoa-stage-check-requests-v2";
 
-const IMPORTED_TSV = `Thursday 4/16/2026	Jeffrey Garrity	IRA	Stage 2 Phase 4		Friday 4/17/2026	Wednesday 4/22/2026	24		Delayed	Student Not Available	Student declined scheduling on 4/19
-Friday 4/17/2026	Will Wood	PPL	EOC		Friday 4/17/2026	Friday 4/24/2026	0	168	Delayed	Student Not Available	Student not available until 4/22
-Friday 4/17/2026	Ryan Castleberry	IRA	Phase 4		Friday 4/17/2026	Saturday 4/18/2026	0	24	On-time		
-Saturday 4/18/2026	Drew Kelly	IRA	Stage 3	6-8 PM, 8-10 PM	Sunday 4/19/2026	Monday 4/20/2026	24	24	On-time		Drew Kelly has limited availability
-Sunday 4/19/2026	Bella Pena	PPL	20 hour Eval	Only her time slots	Sunday 4/19/2026	Wednesday 4/22/2026	0	72	Delayed	Student Not Available	Scheduled in her next time slot; she is not available outside allotted slots
-Monday 4/20/2026	Lauren Bourret	PPL	Stage 2 phase 5 pre solo	Open availability					On-time		
-Tuesday 4/21/2026	Ryan Drozd	IRA	EOC recheck	24th, 26th, or 30th	Tuesday 4/21/2026	Thursday 4/30/2026	0	216	Delayed	Student Not Available	Was scheduled within 48 hours, but check is not until next week due to limited availability
-Wednesday 4/22/2026	Nick Peteas	IRA	Phase 2	25th-29th anytime	Wednesday 4/22/2026	Thursday 4/23/2026	0	24	Delayed	Student Not Available	Scheduled within 24 hours, but student availability did not start until Saturday
-Friday 4/24/2026	Kevin Abi	CFI	EOC	27th-29th anytime	Friday 4/24/2026	Friday 4/24/2026	0	96	Delayed	Student Not Available	Student unavailable until 4/27
-Friday 4/24/2026	Ryan Callan	IRA	Stage 1	Weekend; after 4 PM Mon-Wed	Friday 4/24/2026	Friday 4/24/2026	0	72	Delayed	Other	Airport closed on weekend, no planes, limited evening availability
-Friday 4/24/2026	Justin Garrow	IRA	EOC	Full	Friday 4/24/2026	Friday 4/24/2026	0	0	On-time		
-Sunday 4/26/2026	Edwin Garcia	IRA	EOC	Open availability starting Monday	Sunday 4/26/2026	Tuesday 4/28/2026	0	48	Delayed	Check Instructor Availability	Technically past 48; scheduled ASAP given availability and instructor schedule
-Sunday 4/26/2026	Alysha Andrade	IRA	Stage 2 IRA	Tuesday limited; Wednesday all day	Sunday 4/26/2026	Wednesday 4/29/2026	0	72	Delayed	Student Not Available	Availability and student requested this time
-Monday 4/27/2026	Fernando Neves	PPL	EOC part 61	Wed, Fri, Sat all day	Tuesday 4/28/2026	Friday 5/1/2026	24	72	Delayed	Check Instructor Availability	Emma and Ryan do not have good availability until weekend
-Monday 4/27/2026	Daniel Weis	IRA	Stage 3 Phase 6	Every day after 4 PM	Tuesday 4/28/2026	Wednesday 4/29/2026	24	24	On-time		
-Tuesday 4/28/2026	Justin Garrow	IRA	EOC	Open May 1; May 4 noon onward	Friday 5/1/2026	Wednesday 5/6/2026	72	120	Delayed	Student Not Available	Availability started on 5/4
-Friday 5/1/2026	Trevor Kwiatkowski	PPL	Phase 5	Open	Friday 5/1/2026	Saturday 5/2/2026	0	24	On-time		
-Monday 5/4/2026	Conor Riegel-Madden	PPL	Phase 2 Stage check	All day tomorrow; Wed-Sun until 6 PM	Monday 5/4/2026	Tuesday 5/5/2026	0	24	On-time		
-Monday 5/4/2026	Daniel Weis	IRA	Stage 3 phase 6 recheck	Available every day after 4 PM	Tuesday 5/5/2026	Tuesday 5/5/2026	24	0	On-time		
-Tuesday 5/5/2026	Preston Lovin	PPL	Stage 2 Flight Recheck	12-4 PM next 3 days	Wednesday 5/6/2026	Thursday 5/7/2026	24	24	On-time		Scheduled for Friday 5/8 right at 48 hours
-Wednesday 5/6/2026	Trevor Kwiatkowski	IRA	Phase 5	Thursday-Saturday 6-10 AM	Wednesday 5/6/2026	Friday 5/8/2026	0	48	On-time		Early availability
-Friday 5/15/2026	Edwin Garcia	IRA	EOC	Tuesday 10 AM; Wednesday and Thursday all day	Monday 5/11/2026	Thursday 5/14/2026	-96	72	Delayed	Check Instructor Availability	Brady had EOC and spin trainings; scheduled with Evan
-Friday 5/15/2026	Tyler Wobschall	PPL	Pre solo 141	Open availability	Tuesday 5/12/2026	Wednesday 5/13/2026	-72	24	On-time		
-Monday 5/11/2026	Sophia Monk	PPL	Presolo stage check	Available all week except Wed after 3 PM and Sat after 2 PM	Tuesday 5/12/2026	Wednesday 5/13/2026	24	24	On-time		
-Monday 5/11/2026	Chris Freeman	IRA	EOC	Mon 11-5; Tue 1-6; Wed-Thu 11-6	Thursday 5/14/2026	Thursday 5/14/2026	72	0	On-time	Student Not Available	Availability changed due to a family emergency
-Monday 5/11/2026	Michael Dicembre	CAX	EOC	After 10 AM on 5/13, 5/14, 5/16	Thursday 5/14/2026	Thursday 5/14/2026	72	0	On-time	Student Not Available	Student wanted to fly with Peter one last time before progress check
-Friday 5/15/2026	Roy Jones	IRA	Stage 2	After 6 PM; Fri-Sat after 4 PM	Friday 5/15/2026	Saturday 5/16/2026	0	24	On-time		
-Friday 5/15/2026	Max Olsen	PPL	Phase 7	Any day except Monday	Friday 5/15/2026	Tuesday 5/19/2026	0	96	Delayed	Student Not Available	Originally scheduled for 5/16; student declined and requested Tuesday
-Monday 5/18/2026	Nik Olsen	PPL	Phase 5	Open after Tuesday	Monday 5/18/2026	Thursday 5/21/2026		72	Delayed	Check Instructor Availability	Brady is fully booked with progress checks until that point
-Sunday 5/17/2026	Lauren Bourret	PPL	Stage 2 phase 5	Open availability	Sunday 5/17/2026	Tuesday 5/19/2026	6	48	Delayed	Check Instructor Availability	Had to move things around to schedule it
-Thursday 5/21/2026	Max Olsen	PPL	Phase 7 recheck	Open except Mondays	Thursday 5/21/2026	Friday 5/22/2026	10		On-time		
-Sunday 5/24/2026	Will Wood	PPL	EOC flight recheck	Open Thursday 5/28 and Friday 5/29	Sunday 5/24/2026	Thursday 5/28/2026	6	0	Delayed	Student Not Available	Student availability
-Sunday 5/24/2026	Cory Sitler	PPL	EOC	5/29 12-6; 5/30 and 5/31 open	Monday 5/25/2026	Saturday 5/30/2026		0	Delayed	Student Not Available	Student availability
-Monday 5/25/2026	Bailey Dean	PPL	Phase 2 Stage check	Open	Monday 5/25/2026	Wednesday 5/27/2026	0	48	On-time		
-Monday 5/25/2026	Chris Batchelor	CFI	Phase 2 141 student	Open except Saturday and Sunday	Monday 5/25/2026	Wednesday 5/27/2026	0	48	On-time		
-Monday 5/25/2026	Sam Trawick	IRA	EOC Mock recheck	Open 5/29 and June 2-5	Monday 5/25/2026	Friday 5/29/2026	0	96	Delayed	Student Not Available	Student availability
-Thursday 5/28/2026	Trevor Kwiatkowski	PPL	Phase 7	Open	Wednesday 5/27/2026	Thursday 5/28/2026	1	21	Delayed	Student Not Available	Opening for Friday but student requested Saturday
-Thursday 5/28/2026	Ethan Winkler	IRA	EOC	29th before 5; 30th unavailable; 31st after 2; June 1-6 varied	Thursday 5/28/2026	Thursday 5/28/2026	18	2	Delayed	Check Instructor Availability	Instructor schedule full and student availability did not allow mornings
-Friday 5/29/2026	Roy Jones	IRA	Phase 2	After 4 PM; Friday and Saturday after 6 AM		Friday 5/29/2026	12	0.27	On-time		
-Monday 6/1/2026	Alysha Andrade	IRA	Stage 3	6 AM-12 PM on listed dates	Monday 6/1/2026	Monday 6/1/2026	1		On-time		
-Thursday 6/4/2026	Nik Olsen	PPL	Stage 5 recheck									`;
+const IMPORTED_TSV = `Thursday 4/16/2026	Avery Brooks	IRA	Stage 2 Phase 4		Friday 4/17/2026	Wednesday 4/22/2026	24		Delayed	Student Not Available	Student declined scheduling on 4/19
+Friday 4/17/2026	Maya Chen	PPL	EOC		Friday 4/17/2026	Friday 4/24/2026	0	168	Delayed	Student Not Available	Student not available until 4/22
+Friday 4/17/2026	Noah Mercer	IRA	Phase 4		Friday 4/17/2026	Saturday 4/18/2026	0	24	On-time
+Saturday 4/18/2026	Sofia Reyes	IRA	Stage 3	6-8 PM, 8-10 PM	Sunday 4/19/2026	Monday 4/20/2026	24	24	On-time		Student has limited availability
+Sunday 4/19/2026	Eli Morgan	PPL	20 hour Eval	Only her time slots	Sunday 4/19/2026	Wednesday 4/22/2026	0	72	Delayed	Student Not Available	Scheduled in her next time slot; she is not available outside allotted slots
+Monday 4/20/2026	Nina Patel	PPL	Stage 2 phase 5 pre solo	Open availability					On-time
+Tuesday 4/21/2026	Marcus Lane	IRA	EOC recheck	24th, 26th, or 30th	Tuesday 4/21/2026	Thursday 4/30/2026	0	216	Delayed	Student Not Available	Was scheduled within 48 hours, but check is not until next week due to limited availability
+Wednesday 4/22/2026	Tessa Blake	IRA	Phase 2	25th-29th anytime	Wednesday 4/22/2026	Thursday 4/23/2026	0	24	Delayed	Student Not Available	Scheduled within 24 hours, but student availability did not start until Saturday
+Friday 4/24/2026	Julian Brooks	CFI	EOC	27th-29th anytime	Friday 4/24/2026	Friday 4/24/2026	0	96	Delayed	Student Not Available	Student unavailable until 4/27
+Friday 4/24/2026	Amara Lewis	IRA	Stage 1	Weekend; after 4 PM Mon-Wed	Friday 4/24/2026	Friday 4/24/2026	0	72	Delayed	Other	Airport closed on weekend, no planes, limited evening availability
+Friday 4/24/2026	Owen Carter	IRA	EOC	Full	Friday 4/24/2026	Friday 4/24/2026	0	0	On-time
+Sunday 4/26/2026	Lena Walsh	IRA	EOC	Open availability starting Monday	Sunday 4/26/2026	Tuesday 4/28/2026	0	48	Delayed	Check Instructor Availability	Technically past 48; scheduled ASAP given availability and instructor schedule
+Sunday 4/26/2026	Caleb Rivera	IRA	Stage 2 IRA	Tuesday limited; Wednesday all day	Sunday 4/26/2026	Wednesday 4/29/2026	0	72	Delayed	Student Not Available	Availability and student requested this time
+Monday 4/27/2026	Iris Bennett	PPL	EOC part 61	Wed, Fri, Sat all day	Tuesday 4/28/2026	Friday 5/1/2026	24	72	Delayed	Check Instructor Availability	Check instructors have limited availability until the weekend
+Monday 4/27/2026	Theo Grant	IRA	Stage 3 Phase 6	Every day after 4 PM	Tuesday 4/28/2026	Wednesday 4/29/2026	24	24	On-time
+Tuesday 4/28/2026	Owen Carter	IRA	EOC	Open May 1; May 4 noon onward	Friday 5/1/2026	Wednesday 5/6/2026	72	120	Delayed	Student Not Available	Availability started on 5/4
+Friday 5/1/2026	Mila Foster	PPL	Phase 5	Open	Friday 5/1/2026	Saturday 5/2/2026	0	24	On-time
+Monday 5/4/2026	Jonah Pierce	PPL	Phase 2 Stage check	All day tomorrow; Wed-Sun until 6 PM	Monday 5/4/2026	Tuesday 5/5/2026	0	24	On-time
+Monday 5/4/2026	Theo Grant	IRA	Stage 3 phase 6 recheck	Available every day after 4 PM	Tuesday 5/5/2026	Tuesday 5/5/2026	24	0	On-time
+Tuesday 5/5/2026	Sage Monroe	PPL	Stage 2 Flight Recheck	12-4 PM next 3 days	Wednesday 5/6/2026	Thursday 5/7/2026	24	24	On-time		Scheduled for Friday 5/8 right at 48 hours
+Wednesday 5/6/2026	Mila Foster	IRA	Phase 5	Thursday-Saturday 6-10 AM	Wednesday 5/6/2026	Friday 5/8/2026	0	48	On-time		Early availability
+Friday 5/15/2026	Lena Walsh	IRA	EOC	Tuesday 10 AM; Wednesday and Thursday all day	Monday 5/11/2026	Thursday 5/14/2026	-96	72	Delayed	Check Instructor Availability	Check instructor had EOC and spin-training blocks; scheduled with alternate instructor
+Friday 5/15/2026	Riley Quinn	PPL	Pre solo 141	Open availability	Tuesday 5/12/2026	Wednesday 5/13/2026	-72	24	On-time
+Monday 5/11/2026	Nolan Hayes	PPL	Presolo stage check	Available all week except Wed after 3 PM and Sat after 2 PM	Tuesday 5/12/2026	Wednesday 5/13/2026	24	24	On-time
+Monday 5/11/2026	Aria Coleman	IRA	EOC	Mon 11-5; Tue 1-6; Wed-Thu 11-6	Thursday 5/14/2026	Thursday 5/14/2026	72	0	On-time	Student Not Available	Availability changed due to a family emergency
+Monday 5/11/2026	Miles Turner	CAX	EOC	After 10 AM on 5/13, 5/14, 5/16	Thursday 5/14/2026	Thursday 5/14/2026	72	0	On-time	Student Not Available	Student requested one final review flight before the progress check
+Friday 5/15/2026	Elena Price	IRA	Stage 2	After 6 PM; Fri-Sat after 4 PM	Friday 5/15/2026	Saturday 5/16/2026	0	24	On-time
+Friday 5/15/2026	Kai Donovan	PPL	Phase 7	Any day except Monday	Friday 5/15/2026	Tuesday 5/19/2026	0	96	Delayed	Student Not Available	Originally scheduled for 5/16; student declined and requested Tuesday
+Monday 5/18/2026	Grace Holloway	PPL	Phase 5	Open after Tuesday	Monday 5/18/2026	Thursday 5/21/2026		72	Delayed	Check Instructor Availability	Check instructor schedule is fully booked with progress checks until that point
+Sunday 5/17/2026	Nina Patel	PPL	Stage 2 phase 5	Open availability	Sunday 5/17/2026	Tuesday 5/19/2026	6	48	Delayed	Check Instructor Availability	Had to move things around to schedule it
+Thursday 5/21/2026	Kai Donovan	PPL	Phase 7 recheck	Open except Mondays	Thursday 5/21/2026	Friday 5/22/2026	10		On-time
+Sunday 5/24/2026	Maya Chen	PPL	EOC flight recheck	Open Thursday 5/28 and Friday 5/29	Sunday 5/24/2026	Thursday 5/28/2026	6	0	Delayed	Student Not Available	Student availability
+Sunday 5/24/2026	Isaac Reed	PPL	EOC	5/29 12-6; 5/30 and 5/31 open	Monday 5/25/2026	Saturday 5/30/2026		0	Delayed	Student Not Available	Student availability
+Monday 5/25/2026	Clara Morgan	PPL	Phase 2 Stage check	Open	Monday 5/25/2026	Wednesday 5/27/2026	0	48	On-time
+Monday 5/25/2026	Leo Bennett	CFI	Phase 2 141 student	Open except Saturday and Sunday	Monday 5/25/2026	Wednesday 5/27/2026	0	48	On-time
+Monday 5/25/2026	Mara Collins	IRA	EOC Mock recheck	Open 5/29 and June 2-5	Monday 5/25/2026	Friday 5/29/2026	0	96	Delayed	Student Not Available	Student availability
+Thursday 5/28/2026	Mila Foster	PPL	Phase 7	Open	Wednesday 5/27/2026	Thursday 5/28/2026	1	21	Delayed	Student Not Available	Opening for Friday but student requested Saturday
+Thursday 5/28/2026	Dylan Park	IRA	EOC	29th before 5; 30th unavailable; 31st after 2; June 1-6 varied	Thursday 5/28/2026	Thursday 5/28/2026	18	2	Delayed	Check Instructor Availability	Instructor schedule full and student availability did not allow mornings
+Friday 5/29/2026	Elena Price	IRA	Phase 2	After 4 PM; Friday and Saturday after 6 AM		Friday 5/29/2026	12	0.27	On-time
+Monday 6/1/2026	Caleb Rivera	IRA	Stage 3	6 AM-12 PM on listed dates	Monday 6/1/2026	Monday 6/1/2026	1		On-time
+Thursday 6/4/2026	Grace Holloway	PPL	Stage 5 recheck									`;
 
 const rows = document.querySelector("#request-rows");
 const emptyState = document.querySelector("#empty-state");
@@ -55,6 +56,7 @@ const deleteButton = document.querySelector("#delete-request-button");
 const dialogTitle = document.querySelector("#request-dialog-title");
 const toast = document.querySelector("#stage-toast");
 let requests = [];
+let studentDirectory = [];
 
 function parseImportedRequests() {
   return IMPORTED_TSV.trim().split("\n").map((line, index) => {
@@ -98,9 +100,10 @@ async function loadRequests() {
   }
 }
 
-async function saveRequests() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(requests));
-  await saveCollectionData("stage-check-requests", requests);
+async function saveRequests(options = {}) {
+  cacheLocalData(STORAGE_KEY, requests);
+  requests = await saveCollectionData("stage-check-requests", requests, options);
+  cacheLocalData(STORAGE_KEY, requests);
 }
 
 function hoursBetween(start, end) {
@@ -210,9 +213,39 @@ function openForm(request = null) {
   form.elements.requestedAt.value = request?.requestedAt || localDateTimeNow();
   ["student", "course", "checkType", "availability", "approvedAt", "scheduledAt", "statusOverride", "delayReason", "notes"]
     .forEach((name) => { if (request) form.elements[name].value = request[name] || ""; });
+  if (!request) fillStageCheckFromStudent();
   dialogTitle.textContent = request ? "Edit stage check" : "Add a stage check";
   deleteButton.hidden = !request;
   dialog.showModal();
+}
+
+function fillStageCheckFromStudent() {
+  const student = findStudentByName(studentDirectory, form.elements.student.value);
+  if (!student) return;
+  form.elements.course.value = stageCourseFromStudent(student);
+  form.elements.availability.value = formatStudentAvailability(student);
+}
+
+function stageCourseFromStudent(student) {
+  const text = `${student.currentCourse || ""} ${student.curriculum || ""}`.toUpperCase();
+  if (text.includes("CFI")) return "CFI";
+  if (text.includes("IRA") || text.includes("INSTRUMENT")) return "IRA";
+  if (text.includes("CAX") || text.includes("COMMERCIAL")) return "CAX";
+  if (text.includes("PPL") || text.includes("PRIVATE")) return "PPL";
+  return "";
+}
+
+function formatStudentAvailability(student) {
+  const dayFields = [
+    ["mondayAvailability", "Mon"],
+    ["tuesdayAvailability", "Tue"],
+    ["wednesdayAvailability", "Wed"],
+    ["thursdayAvailability", "Thu"],
+    ["fridayAvailability", "Fri"],
+    ["saturdayAvailability", "Sat"],
+    ["sundayAvailability", "Sun"]
+  ];
+  return dayFields.map(([field, label]) => student[field] ? `${label}: ${student[field]}` : "").filter(Boolean).join("; ");
 }
 
 function showToast(message) {
@@ -264,13 +297,14 @@ deleteButton.addEventListener("click", () => {
   const id = form.elements.requestId.value;
   if (!id || !confirm("Delete this stage check request?")) return;
   requests = requests.filter((request) => request.id !== id);
-  saveRequests();
+  saveRequests({ allowDeletes: true });
   dialog.close();
   render();
   showToast("Stage check deleted.");
 });
 
 [searchInput, courseFilter, statusFilter].forEach((element) => element.addEventListener("input", render));
+form.elements.student.addEventListener("change", fillStageCheckFromStudent);
 document.querySelector("#open-form-button").addEventListener("click", () => openForm());
 document.querySelector("#close-form-button").addEventListener("click", () => dialog.close());
 document.querySelector("#cancel-form-button").addEventListener("click", () => dialog.close());
@@ -278,12 +312,18 @@ document.querySelector("#export-button").addEventListener("click", exportCsv);
 document.querySelector("#restore-import-button").addEventListener("click", () => {
   if (!confirm("Replace current stage-check data with the original imported history?")) return;
   requests = parseImportedRequests();
-  saveRequests();
+  saveRequests({ allowDeletes: true });
   render();
   showToast("Imported stage-check history restored.");
 });
 
 (async () => {
-  requests = await loadRequests();
+  const [loadedRequests, loadedStudents] = await Promise.all([
+    loadRequests(),
+    getStudentDirectory(),
+    attachStudentNameDatalists()
+  ]);
+  requests = loadedRequests;
+  studentDirectory = loadedStudents;
   render();
 })();

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KORL student detail and edit page." />
+  <title>Student Detail - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-student-page="detail">
+  <header class="topbar"><a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav></header>
+  <main class="student-page">
+    <nav class="student-breadcrumb" aria-label="Breadcrumb"><a href="students.html">Students</a><span aria-hidden="true">/</span><span id="student-breadcrumb-name">Profile</span></nav>
+    <header class="tracker-header student-detail-header"><div><span class="eyebrow tuition-eyebrow">Student profile</span><h1 id="student-detail-title">Student</h1><p id="student-detail-subtitle" class="student-detail-badges"></p></div><div class="controls"><div class="student-record-nav" id="student-record-nav" aria-label="Browse student profiles"></div><a class="button primary" id="student-sap-upload" href="sap-import.html" hidden>Upload SAP Matrix</a><button class="button danger-button" id="delete-student-button" type="button" hidden>Remove student</button><a class="button quiet" href="students.html">All students</a></div></header>
+    <nav class="student-detail-nav" aria-label="Student profile sections">
+      <a class="active" href="#profile-section">Profile</a><a href="#training-section">Training</a><a href="#availability-section">Availability</a><a href="#notes-section">Notes</a><a href="#activity-section">Activity</a><a href="#attendance-section">Attendance</a><a href="#flags-section">Flags</a><a href="#sap-training-timeline">SAP timeline</a><a href="#history-section">History</a>
+    </nav>
+    <section class="student-profile-overview" id="student-profile-overview" aria-label="Student at a glance"></section>
+    <section class="student-detail-layout">
+      <div id="student-form-wrap"></div>
+      <aside class="student-side-panel">
+        <details class="student-panel student-collapsible-panel" id="activity-section" open><summary class="student-panel-heading"><div><span class="student-section-kicker">Learning record</span><h2>Activity</h2></div><span class="student-panel-glance" id="student-activity-glance">View details</span></summary><div id="student-activity-summary"></div></details>
+        <details class="student-panel student-collapsible-panel" id="attendance-section" open><summary class="student-panel-heading"><div><span class="student-section-kicker">Current standing</span><h2>Attendance</h2></div><span class="student-panel-glance" id="student-attendance-glance">View details</span></summary><div id="student-detail-attendance"></div><div class="student-panel-footer-actions"><a class="student-panel-footer-link" href="attendance-tracking.html">MyFBO attendance</a><a class="student-panel-footer-link" href="ground-attendance.html">Ground attendance</a></div></details>
+        <details class="student-panel student-collapsible-panel" id="sap-summary-section" open><summary class="student-panel-heading"><div><span class="student-section-kicker">Training plan</span><h2>SAP Matrix</h2></div><span class="student-panel-glance" id="student-sap-glance">View details</span></summary><div id="student-detail-sap-summary"></div><a class="student-panel-footer-link" href="#sap-training-timeline">Open full timeline</a></details>
+        <details class="student-panel student-collapsible-panel" id="flags-section" open><summary class="student-panel-heading"><div><span class="student-section-kicker">Needs review</span><h2>Automatic flags</h2></div><span class="student-panel-glance" id="student-flags-glance">None</span></summary><div id="student-detail-flags"></div></details>
+        <details class="student-panel student-collapsible-panel" id="history-section"><summary class="student-panel-heading"><div><span class="student-section-kicker">Recent changes</span><h2>Audit history</h2></div><span class="student-panel-glance" id="student-history-glance">View details</span></summary><div id="student-audit-log"></div></details>
+      </aside>
+    </section>
+    <details class="student-panel sap-student-timeline student-collapsible-panel" id="sap-training-timeline"><summary class="student-panel-heading"><div><span class="student-section-kicker">Course milestones</span><h2>SAP training timeline</h2><p>Projected and actual training dates remain available here.</p></div><span class="student-panel-glance">View timeline</span></summary><div id="student-sap-timeline"></div><a class="student-panel-footer-link" href="sap-dashboard.html">View all SAP alerts</a></details>
+  </main>
+  <script type="module" src="student-app.js"></script>
+</body>
+</html>

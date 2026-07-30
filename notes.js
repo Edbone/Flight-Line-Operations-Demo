@@ -1,5 +1,4 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
-import { demoNotes } from "./demo-data.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
 
 const NOTES_STORAGE_KEY = "aoa-staff-notes-v1";
 
@@ -11,13 +10,13 @@ const emptyState = document.querySelector("#notes-empty-state");
 let notes = [];
 
 async function loadNotes() {
-  const loaded = await loadCollectionData("notes", NOTES_STORAGE_KEY);
-  return Array.isArray(loaded) && loaded.length > 0 ? loaded : demoNotes;
+  return await loadCollectionData("notes", NOTES_STORAGE_KEY);
 }
 
-async function saveNotes() {
-  localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes));
-  await saveCollectionData("notes", notes);
+async function saveNotes(options = {}) {
+  cacheLocalData(NOTES_STORAGE_KEY, notes);
+  notes = await saveCollectionData("notes", notes, options);
+  cacheLocalData(NOTES_STORAGE_KEY, notes);
 }
 
 function escapeHtml(value = "") {
@@ -170,7 +169,7 @@ notesList.addEventListener("click", async (event) => {
     const prompt = isParent ? "Delete this note and all replies?" : "Delete this reply?";
     if (!confirm(prompt)) return;
     notes = notes.filter((note) => note.id !== deleteId && note.parentId !== deleteId);
-    await saveNotes();
+    await saveNotes({ allowDeletes: true });
     render();
     return;
   }
@@ -240,5 +239,6 @@ searchInput.addEventListener("input", render);
 
 (async () => {
   notes = (await loadNotes()).map(normalizeNote);
+  await saveNotes();
   render();
 })();

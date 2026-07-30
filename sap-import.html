@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Upload, review, and confirm student SAP Matrix PDFs." />
+  <title>SAP Matrix Import - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="stage-checks.html">Stage Checks</a><a href="written-tests.html">Written Test Tracking</a></nav></header>
+  <main class="student-page sap-page">
+    <header class="tracker-header"><div><span class="eyebrow tuition-eyebrow">Training Timeline</span><h1>SAP Matrix import</h1><p>Upload a PDF, verify the extracted student and projected dates, then confirm the import.</p></div><div class="controls"><a class="button quiet" href="sap-dashboard.html">SAP dashboard</a><a class="button quiet" id="sap-back-student" href="students.html">Back</a></div></header>
+    <div class="tuition-alert tuition-alert-error" id="sap-access-error" hidden></div>
+    <section class="sap-upload-card" id="sap-upload-section">
+      <label class="sap-drop-zone" id="sap-drop-zone">
+        <input id="sap-file" type="file" accept="application/pdf,.pdf" />
+        <strong>Drop an SAP Matrix PDF here</strong>
+        <span>or choose a PDF up to 10 MB</span>
+      </label>
+      <div class="sap-upload-actions"><span id="sap-file-name">No file selected</span><button class="button primary" id="sap-upload-button" type="button" disabled>Upload and extract</button></div>
+      <div class="student-photo-status" id="sap-upload-status" role="status" aria-live="polite" hidden><span class="student-save-spinner" aria-hidden="true"></span><span>Validating and extracting the PDF...</span></div>
+    </section>
+    <section id="sap-review" hidden>
+      <div class="sap-review-banner" id="sap-review-banner"></div>
+      <form id="sap-review-form">
+        <section class="student-panel sap-review-section"><div class="student-panel-heading"><div><h2>Student match</h2><p id="sap-match-summary"></p></div><span class="sap-confidence" id="sap-confidence"></span></div><div class="sap-profile-grid"><label>Extracted name<input id="sap-extracted-name" readonly /></label><label>Student profile<select id="sap-student-select" required></select></label><label>Enrollment comparison<input id="sap-enrollment-comparison" readonly /></label><label>Other candidates<textarea id="sap-other-candidates" readonly rows="2"></textarea></label></div></section>
+        <section class="student-panel sap-review-section"><div class="student-panel-heading"><h2>Profile values</h2></div><div class="sap-profile-review" id="sap-profile-review"></div></section>
+        <section class="student-panel sap-review-section"><div class="student-panel-heading"><div><h2>Milestones</h2><p>Edit corrections before confirmation. Actual completion data is read-only and preserved.</p></div><button class="button quiet" id="sap-add-row" type="button">Add milestone</button></div><div class="sap-table-wrap"><table class="sap-review-table"><thead><tr><th>Course</th><th>Raw label</th><th>Type</th><th>Projected date</th><th>Existing / linked status</th><th>Action</th><th>Order</th></tr></thead><tbody id="sap-review-rows"></tbody></table></div></section>
+        <div class="sap-confirm-bar"><span id="sap-review-status" role="status"></span><button class="button quiet" id="sap-cancel-review" type="button">Cancel</button><button class="button quiet" id="sap-save-later" type="button">Save for later</button><button class="button primary" id="sap-confirm-button" type="submit">Confirm SAP import</button></div>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="sap-import.js?v=20260715-2"></script>
+</body>
+</html>

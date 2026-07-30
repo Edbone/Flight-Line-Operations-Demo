@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create ground school sessions and manage QR code attendance." />
+  <title>Ground Attendance - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a class="active" href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+
+  <main class="tracker-page ground-attendance-page">
+    <header class="tracker-header">
+      <div>
+        <span class="eyebrow">Ground School</span>
+        <h1>Ground Attendance</h1>
+        <p>Create classroom sessions, post a QR code, and keep a simple attended-student roster.</p>
+      </div>
+      <div class="controls">
+        <button class="button primary" id="open-ground-add-attendance" type="button">Add Session</button>
+        <button class="button secondary" id="show-import-button" type="button">Import CSV</button>
+      </div>
+    </header>
+
+    <section class="metric-grid ground-metric-grid" aria-label="Ground attendance summary">
+      <article class="metric-card metric-blue"><span>Ground blocks</span><strong id="ground-session-count">0</strong><small>Auto-created QR sessions</small></article>
+      <article class="metric-card metric-green"><span>Students attended</span><strong id="ground-attendance-count">0</strong><small>Ground check-ins</small></article>
+      <article class="metric-card metric-yellow"><span>Current session</span><strong id="ground-current-session">Closed</strong><small id="ground-current-session-detail">No active ground class</small></article>
+      <article class="metric-card metric-red"><span>Repeat students</span><strong id="ground-low-count">0</strong><small id="ground-low-detail">Students with multiple sessions</small></article>
+    </section>
+
+    <section class="tracker-panel ground-students-panel" aria-labelledby="ground-students-title">
+      <div class="tracker-toolbar ground-toolbar">
+        <div>
+          <span class="section-label">Primary View</span>
+          <h2 id="ground-students-title">Students attended</h2>
+        </div>
+        <div class="filter-group">
+          <label class="search-field"><span class="sr-only">Search students</span><input id="ground-student-search" type="search" placeholder="Search student, ID/email, class..." /></label>
+          <select id="ground-student-filter" aria-label="Filter student attendance"><option value="all">All students</option><option value="repeat">Multiple sessions</option><option value="today">Checked in today</option></select>
+        </div>
+      </div>
+      <div class="tracker-table-wrap">
+        <table class="tracker-table ground-student-table">
+          <thead><tr><th>Student</th><th>Ground attended</th><th>Latest session</th></tr></thead>
+          <tbody id="ground-student-table-body"></tbody>
+        </table>
+      </div>
+      <div class="empty-state compact" id="ground-student-empty" hidden><strong>No student attendance yet</strong><p>Check-ins will appear here as students scan the classroom QR codes.</p></div>
+    </section>
+
+    <section class="tracker-panel ground-permanent-panel" aria-labelledby="ground-permanent-title">
+      <div class="ground-panel-heading">
+        <div>
+          <span class="section-label">Room QR Sheet</span>
+          <h2 id="ground-permanent-title">Print classroom QR codes</h2>
+          <p>Use this once to print the five daily class codes for the room.</p>
+        </div>
+        <button class="button primary" id="print-ground-qr-codes" type="button">Print room QR sheet</button>
+      </div>
+      <div class="ground-print-heading" aria-hidden="true">
+        <img src="assets/aoa-logo.png" alt="" />
+        <div>
+          <h2>Ground School QR Check-In Codes</h2>
+          <p>Scan the QR code for the class you are attending. Check-in only works during the class time window.</p>
+        </div>
+      </div>
+      <div class="ground-permanent-grid" id="ground-permanent-grid"></div>
+    </section>
+
+    <section class="tracker-panel ground-import-panel" id="ground-import-panel" hidden aria-labelledby="ground-import-title">
+      <div class="ground-panel-heading">
+        <div>
+          <span class="section-label">Historical Data</span>
+          <h2 id="ground-import-title">CSV import</h2>
+          <p>Required columns: Date, Topic, Student Name. Status is ignored if included.</p>
+        </div>
+        <button class="button quiet" id="hide-import-button" type="button">Close</button>
+      </div>
+      <div class="ground-import-grid">
+        <label class="ground-file-label">Upload CSV <input id="ground-csv-file" type="file" accept=".csv,text/csv" /></label>
+        <label class="ground-file-label full-field">Or paste CSV
+          <textarea id="ground-csv-text" rows="8" placeholder="Date,Topic,Student Name&#10;2026-01-15,Weather Theory,Alex Smith"></textarea>
+        </label>
+      </div>
+      <div class="ground-import-actions">
+        <button class="button secondary" id="preview-import-button" type="button">Preview rows</button>
+        <button class="button primary" id="commit-import-button" type="button" disabled>Import preview</button>
+      </div>
+      <p class="ground-message" id="ground-import-message" role="status"></p>
+      <div class="tracker-table-wrap" id="ground-import-preview-wrap" hidden>
+        <table class="tracker-table ground-import-table">
+          <thead><tr><th>Date</th><th>Topic</th><th>Student</th><th>Action</th></tr></thead>
+          <tbody id="ground-import-preview-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="request-dialog ground-record-dialog" id="ground-add-dialog">
+    <form id="ground-add-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Ground Attendance</span><h2 id="ground-add-dialog-title">Add missed QR attendance</h2></div>
+        <button class="icon-button" id="close-ground-add-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <p class="ground-record-context" id="ground-add-context"></p>
+      <div class="form-grid ground-attendance-form-grid">
+        <label class="full-field">Student profile
+          <select id="ground-student-profile-select"></select>
+        </label>
+        <label>First name <input name="student_first_name" required maxlength="80" autocomplete="given-name" /></label>
+        <label>Last name <input name="student_last_name" required maxlength="80" autocomplete="family-name" /></label>
+        <label class="full-field">Student ID/email <input name="student_email_or_id" maxlength="140" autocomplete="email" placeholder="Optional" /></label>
+        <label>Date <input name="date" type="date" required /></label>
+        <label>Ground block
+          <select name="template_id" id="ground-add-template" required></select>
+        </label>
+        <label class="full-field">Notes <input name="notes" maxlength="400" placeholder="Optional staff notes" /></label>
+      </div>
+      <p class="ground-message ground-record-message" id="ground-add-message" role="status"></p>
+      <div class="dialog-actions">
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-ground-add-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Add attendance</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog ground-record-dialog" id="ground-record-dialog">
+    <form id="ground-record-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Ground Attendance</span><h2 id="ground-record-dialog-title">Edit record</h2></div>
+        <button class="icon-button" id="close-ground-record-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" name="id" />
+      <input type="hidden" name="session_id" />
+      <p class="ground-record-context" id="ground-record-context"></p>
+      <div class="form-grid ground-attendance-form-grid">
+        <label>First name <input name="student_first_name" required maxlength="80" autocomplete="given-name" /></label>
+        <label>Last name <input name="student_last_name" required maxlength="80" autocomplete="family-name" /></label>
+        <label class="full-field">Student ID/email <input name="student_email_or_id" maxlength="140" autocomplete="email" placeholder="Optional" /></label>
+        <label>Check-in time <input name="check_in_time" type="datetime-local" required /></label>
+        <label class="full-field">Notes <input name="notes" maxlength="400" placeholder="Optional staff notes" /></label>
+      </div>
+      <p class="ground-message ground-record-message" id="ground-record-message" role="status"></p>
+      <div class="dialog-actions">
+        <button class="button danger-button" id="delete-ground-record" type="button">Remove record</button>
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-ground-record-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Save changes</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="request-dialog ground-record-dialog" id="ground-name-match-dialog">
+    <form id="ground-name-match-form" method="dialog">
+      <div class="dialog-heading">
+        <div><span class="eyebrow">Name Correction</span><h2 id="ground-name-match-title">Match student name</h2></div>
+        <button class="icon-button" id="close-ground-name-match-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <input type="hidden" name="source_key" />
+      <p class="ground-record-context" id="ground-name-match-context"></p>
+      <div class="form-grid ground-attendance-form-grid">
+        <label class="full-field">Correct student profile
+          <select id="ground-name-match-select" name="student_id" required></select>
+        </label>
+      </div>
+      <p class="ground-message ground-record-message" id="ground-name-match-message" role="status"></p>
+      <div class="dialog-actions">
+        <span class="dialog-action-spacer"></span>
+        <button class="button quiet" id="cancel-ground-name-match-dialog" type="button">Cancel</button>
+        <button class="button primary" type="submit">Merge under this name</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="ground-attendance.js"></script>
+</body>
+</html>

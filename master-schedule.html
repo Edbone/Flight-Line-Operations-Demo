@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AOA visual master schedule planner by instructor, airplane, and day." />
+  <title>Master Schedule - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-schedule-page>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a class="active" href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+
+  <main class="schedule-page">
+    <section class="schedule-print-header" aria-hidden="true">
+      <img src="assets/aoa-logo.png" alt="" />
+      <div>
+        <span>Academy of Aviation · KORL</span>
+        <h1 id="schedule-print-title">Master schedule</h1>
+        <p id="schedule-print-meta"></p>
+      </div>
+    </section>
+    <header class="tracker-header schedule-header">
+      <div>
+        <span class="eyebrow tuition-eyebrow">Scheduling</span>
+        <h1>Master schedule</h1>
+        <p>Visual planning board for instructor days, airplanes, and daily instructor loads.</p>
+      </div>
+      <div class="controls">
+        <button class="button secondary" type="button" id="schedule-batch-delete-open" data-admin-only>Batch delete</button>
+        <button class="button secondary" type="button" id="schedule-batch-open" data-admin-only>Batch schedule</button>
+        <button class="button primary" type="button" id="schedule-new-booking" data-admin-only>New booking</button>
+      </div>
+    </header>
+
+    <p class="schedule-readonly-note" id="schedule-readonly-note" hidden>View only. Master schedule edits are limited to admin accounts.</p>
+
+    <section class="schedule-toolbar" aria-label="Schedule controls">
+      <label>
+        Instructor
+        <select id="schedule-instructor-filter"></select>
+      </label>
+      <label data-admin-only>
+        Add instructor
+        <span class="schedule-inline-add"><button type="button" id="schedule-add-instructor">Add instructor</button></span>
+      </label>
+      <label data-admin-only>
+        Remove instructor
+        <span class="schedule-inline-add"><select id="schedule-instructor-remove"></select><button type="button" id="schedule-edit-instructor">Edit</button><button type="button" id="schedule-remove-instructor">Remove</button></span>
+      </label>
+      <span class="schedule-save-state" id="schedule-save-state">Loading...</span>
+    </section>
+
+    <div class="schedule-view-bar">
+      <nav class="schedule-tabs" aria-label="Schedule views">
+        <button class="active" type="button" data-schedule-view="instructor-day">Instructor by day</button>
+        <button type="button" data-schedule-view="airplane-day">Daily by airplane</button>
+        <button type="button" data-schedule-view="instructor-daily">Daily by instructor</button>
+      </nav>
+      <div class="schedule-export-actions">
+        <button class="button primary schedule-print-button" type="button" id="schedule-print-current">Print / Save PDF</button>
+        <button class="button secondary schedule-export-button" type="button" id="schedule-export-current">Export CSV</button>
+      </div>
+    </div>
+
+    <section class="schedule-legend" id="schedule-legend" aria-label="Booking category colors"></section>
+
+    <section class="schedule-board-shell">
+      <div class="schedule-board" id="schedule-board" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <datalist id="schedule-student-options"></datalist>
+  <datalist id="schedule-airplane-options"></datalist>
+  <dialog class="schedule-dialog" id="schedule-instructor-dialog">
+    <form method="dialog" id="schedule-instructor-form">
+      <header>
+        <div>
+          <span class="section-label">Instructor</span>
+          <h2>Add instructor</h2>
+        </div>
+        <button type="button" class="schedule-icon-button" id="schedule-close-instructor" aria-label="Close">x</button>
+      </header>
+      <input type="hidden" id="instructor-original-name" />
+      <div class="schedule-form-grid">
+        <label class="wide-field">Name<input id="instructor-name" required /></label>
+        <label class="schedule-check-label"><input id="instructor-check" type="checkbox" /> Check instructor</label>
+      </div>
+      <fieldset class="schedule-day-picker schedule-instructor-day-picker">
+        <legend>Days off</legend>
+        <label><input type="checkbox" name="instructor-days-off" value="monday" /> Mon</label>
+        <label><input type="checkbox" name="instructor-days-off" value="tuesday" /> Tue</label>
+        <label><input type="checkbox" name="instructor-days-off" value="wednesday" /> Wed</label>
+        <label><input type="checkbox" name="instructor-days-off" value="thursday" /> Thu</label>
+        <label><input type="checkbox" name="instructor-days-off" value="friday" /> Fri</label>
+        <label><input type="checkbox" name="instructor-days-off" value="saturday" /> Sat</label>
+        <label><input type="checkbox" name="instructor-days-off" value="sunday" /> Sun</label>
+      </fieldset>
+      <fieldset class="schedule-progress-fieldset">
+        <legend>Progress check blocks</legend>
+        <div class="schedule-progress-form">
+          <label>Day<select id="progress-day"></select></label>
+          <label>Start<select id="progress-start"></select></label>
+          <label>End<select id="progress-end"></select></label>
+          <button type="button" class="button secondary" id="progress-add">Add block</button>
+        </div>
+        <div class="schedule-progress-list" id="progress-list"></div>
+      </fieldset>
+      <menu class="schedule-dialog-actions">
+        <button class="button secondary" value="cancel">Cancel</button>
+        <button class="button primary" value="save">Save instructor</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="schedule-dialog" id="schedule-dialog">
+    <form method="dialog" id="schedule-form">
+      <header>
+        <div>
+          <span class="section-label">Booking</span>
+          <h2 id="schedule-dialog-title">New booking</h2>
+        </div>
+        <button type="button" class="schedule-icon-button" id="schedule-close-dialog" aria-label="Close">x</button>
+      </header>
+      <input type="hidden" id="schedule-booking-id" />
+      <div class="schedule-form-grid">
+        <label>Student / activity<input id="schedule-student" list="schedule-student-options" required /></label>
+        <label>Category<select id="schedule-category"></select></label>
+        <label>Instructor<select id="schedule-instructor"></select></label>
+        <label>Airplane<input id="schedule-airplane" list="schedule-airplane-options" placeholder="N12345, Sim, Ground" /></label>
+        <label>Day<select id="schedule-day"></select></label>
+        <label>Start<select id="schedule-start"></select></label>
+        <label>End<select id="schedule-end"></select></label>
+        <label>Notes<input id="schedule-notes" placeholder="Optional" /></label>
+      </div>
+      <p class="schedule-booking-meta" id="schedule-booking-meta"></p>
+      <menu class="schedule-dialog-actions">
+        <button class="button secondary" type="button" id="schedule-delete">Delete</button>
+        <button class="button primary" value="save">Save booking</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="schedule-dialog" id="schedule-batch-dialog">
+    <form method="dialog" id="schedule-batch-form">
+      <header>
+        <div>
+          <span class="section-label">Batch</span>
+          <h2>Batch schedule student</h2>
+        </div>
+        <button type="button" class="schedule-icon-button" id="schedule-close-batch" aria-label="Close">x</button>
+      </header>
+      <div class="schedule-form-grid">
+        <label>Student<input id="batch-student" list="schedule-student-options" required /></label>
+        <label>Category<select id="batch-category"></select></label>
+        <label>Instructor<select id="batch-instructor"></select></label>
+        <label>Airplane<input id="batch-airplane" list="schedule-airplane-options" placeholder="Optional" /></label>
+        <label>Start<select id="batch-start"></select></label>
+        <label>End<select id="batch-end"></select></label>
+        <label>Notes<input id="batch-notes" placeholder="Optional" /></label>
+      </div>
+      <fieldset class="schedule-day-picker">
+        <legend>Days</legend>
+        <label><input type="checkbox" name="batch-days" value="monday" checked /> Mon</label>
+        <label><input type="checkbox" name="batch-days" value="tuesday" /> Tue</label>
+        <label><input type="checkbox" name="batch-days" value="wednesday" /> Wed</label>
+        <label><input type="checkbox" name="batch-days" value="thursday" /> Thu</label>
+        <label><input type="checkbox" name="batch-days" value="friday" /> Fri</label>
+        <label><input type="checkbox" name="batch-days" value="saturday" /> Sat</label>
+        <label><input type="checkbox" name="batch-days" value="sunday" /> Sun</label>
+      </fieldset>
+      <menu class="schedule-dialog-actions">
+        <button class="button secondary" value="cancel">Cancel</button>
+        <button class="button primary" value="save">Create bookings</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <dialog class="schedule-dialog" id="schedule-batch-delete-dialog">
+    <form method="dialog" id="schedule-batch-delete-form">
+      <header>
+        <div>
+          <span class="section-label">Delete</span>
+          <h2>Batch delete bookings</h2>
+        </div>
+        <button type="button" class="schedule-icon-button" id="schedule-close-batch-delete" aria-label="Close">x</button>
+      </header>
+      <div class="schedule-form-grid">
+        <label>Student / activity contains<input id="delete-student" list="schedule-student-options" placeholder="Optional" /></label>
+        <label>Instructor<select id="delete-instructor"></select></label>
+        <label>Day<select id="delete-day"></select></label>
+        <label>Category<select id="delete-category"></select></label>
+      </div>
+      <p class="schedule-delete-count" id="schedule-delete-count">0 bookings match.</p>
+      <menu class="schedule-dialog-actions">
+        <button class="button secondary" value="cancel">Cancel</button>
+        <button class="button primary danger" value="delete">Delete matches</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script type="module" src="master-schedule.js"></script>
+</body>
+</html>

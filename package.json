@@ -1,0 +1,19 @@
+{
+  "name": "aoa-ssr-hub",
+  "version": "1.0.5",
+  "private": true,
+  "scripts": {
+    "version": "node scripts/sync-client-version.mjs",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major",
+    "test": "node --experimental-default-type=module --test tests/*.test.js",
+    "check": "npm test && node --experimental-default-type=module --check firebase.js && node --experimental-default-type=module --check sap-core.mjs && node --experimental-default-type=module --check sap-import.js && node --experimental-default-type=module --check sap-dashboard.js && node --experimental-default-type=module --check student-app.js && node --experimental-default-type=module --check written-tests.js && node --experimental-default-type=module --check written-test-data.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.80",
+    "jose": "^6.1.0",
+    "pdfjs-dist": "^5.4.149",
+    "tesseract.js": "^6.0.1"
+  }
+}

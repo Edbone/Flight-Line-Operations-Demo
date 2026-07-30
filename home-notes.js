@@ -1,13 +1,11 @@
 import { loadCollectionData } from "./firebase.js";
-import { demoNotes } from "./demo-data.js";
 
 const HOME_NOTES_STORAGE_KEY = "aoa-staff-notes-v1";
 const homeNotesList = document.querySelector("#home-notes-list");
 const homeNotesEmpty = document.querySelector("#home-notes-empty");
 
 async function loadHomeNotes() {
-  const loaded = await loadCollectionData("notes", HOME_NOTES_STORAGE_KEY);
-  return Array.isArray(loaded) && loaded.length > 0 ? loaded : demoNotes;
+  return await loadCollectionData("notes", HOME_NOTES_STORAGE_KEY);
 }
 
 function escapeHomeNoteHtml(value = "") {
@@ -32,15 +30,19 @@ async function renderHomeNotes() {
     .sort((a, b) => Number(Boolean(b.isPinned)) - Number(Boolean(a.isPinned)))
     .slice(0, 3);
 
-  homeNotesList.innerHTML = notes.map((note) => `
-    <article class="home-note">
+  homeNotesList.innerHTML = notes.map((note) => {
+    const author = note.author || "Unknown author";
+    return `
+    <article class="home-note${note.isPinned ? " home-note-pinned" : ""}">
+      ${note.isPinned ? '<div class="home-note-meta"><span>Pinned note</span></div>' : ""}
       <p>${escapeHomeNoteHtml(note.message)}</p>
       <footer>
-        <strong>${escapeHomeNoteHtml(note.author)}</strong>
+        <span>Posted by <strong>${escapeHomeNoteHtml(author)}</strong></span>
         <time datetime="${escapeHomeNoteHtml(note.createdAt)}">${formatHomeNoteDate(note.createdAt)}</time>
       </footer>
     </article>
-  `).join("");
+  `;
+  }).join("");
   homeNotesEmpty.hidden = notes.length > 0;
 }
 

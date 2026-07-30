@@ -5,17 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Weekly ground trainer booking schedule for Academy of Aviation." />
   <title>Ground Trainer Schedule - AOA Operations Hub</title>
-  <link rel="icon" type="image/png" href="ekwx-logo.png" />
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
   <script>document.documentElement.classList.add("auth-checking");</script>
   <link rel="stylesheet" href="styles.css" />
   <script src="auth.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="index.html" aria-label="Flight Line Operations Demo home"><img src="ekwx-logo-1.png" alt="Flight Line Operations Demo" /><span><strong>EKWX</strong></span></a>
-    <nav class="main-nav" aria-label="Main navigation">
-      <a href="index.html">Home</a><a class="active" href="sheet1.html">VR Trainers</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Notes</a><a href="maintenance.html">Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><details class="nav-more"><summary>Spreadsheets</summary><div class="nav-more-menu"><a href="written-tests.html">Written Tests</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></div></details>
-    </nav>
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a class="active" href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
   </header>
 
   <main class="trainer-page">
@@ -50,9 +48,10 @@
         <div class="trainer-calendar" id="trainer-calendar"></div>
       </div>
       <div class="calendar-legend">
-        <span><i class="legend-dot lesson"></i>Lesson</span>
-        <span><i class="legend-dot reservation"></i>Reservation</span>
-        <span><i class="legend-dot maintenance"></i>Maintenance</span>
+        <span><i class="legend-dot without-instructor"></i>Without instructor</span>
+        <span><i class="legend-dot with-instructor"></i>With instructor</span>
+        <span><i class="legend-dot checked-in"></i>Checked in</span>
+        <span><i class="legend-dot no-show"></i>No-show (time available)</span>
         <span class="drag-hint">Click a time slot to add · Drag to move</span>
       </div>
     </section>
@@ -66,21 +65,20 @@
       </div>
       <input name="bookingId" type="hidden" />
       <div class="form-grid">
-        <label class="full-field">Student or reservation name <input name="name" required placeholder="Enter a name" /></label>
+        <label class="full-field">Student or reservation name <input name="name" data-student-name required placeholder="Enter a name" /></label>
         <label>Ground trainer
           <select name="trainer" required>
             <option value="trainer1">Ground Trainer 1</option>
             <option value="trainer2">Ground Trainer 2</option>
           </select>
         </label>
-        <label>Booking type
+        <label>Lesson type
           <select name="type" required>
-            <option value="lesson">Lesson</option>
-            <option value="reservation">Reservation</option>
-            <option value="maintenance">Maintenance</option>
+            <option value="without_instructor">Without instructor</option>
+            <option value="with_instructor">With instructor</option>
           </select>
         </label>
-        <label>Initials <input name="initials" maxlength="8" required placeholder="AA" /></label>
+        <input name="initials" type="hidden" />
         <label>Date <input name="date" type="date" required /></label>
         <label>Start time <input name="startTime" type="time" min="06:00" max="21:30" step="1800" required /></label>
         <label>Duration
@@ -97,8 +95,18 @@
         </label>
         <label>Course / notes <input name="notes" placeholder="Optional" /></label>
       </div>
+      <p class="booking-message" id="booking-message" role="alert" hidden></p>
+      <dl class="booking-details" id="booking-details" hidden>
+        <div><dt>Staff</dt><dd data-detail="initials">--</dd></div>
+        <div><dt>Session</dt><dd data-detail="session">--</dd></div>
+        <div><dt>Attendance</dt><dd data-detail="attendance">Not checked in</dd></div>
+        <div><dt>Booked</dt><dd data-detail="booked">--</dd></div>
+        <div><dt>Moved</dt><dd data-detail="moved">--</dd></div>
+      </dl>
       <div class="dialog-actions booking-dialog-actions">
         <button class="button danger-button" id="delete-booking" type="button" hidden>Delete booking</button>
+        <button class="button secondary" id="check-in-booking" type="button" hidden>Check in student</button>
+        <button class="button danger-button" id="no-show-booking" type="button" hidden>Mark no-show</button>
         <span class="dialog-action-spacer"></span>
         <button class="button quiet" id="cancel-booking" type="button">Cancel</button>
         <button class="button primary" type="submit">Save booking</button>

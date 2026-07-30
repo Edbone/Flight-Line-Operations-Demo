@@ -1,5 +1,5 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
-import { demoTuitionPayments } from "./demo-data.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
+import { attachStudentNameDatalists } from "./student-directory.js";
 import {
   escapeHtml,
   formatCurrency,
@@ -41,13 +41,30 @@ let sortState = { key: "studentName", direction: "asc" };
 
 async function loadPayments() {
   const loaded = await loadCollectionData(STORAGE_COLLECTION, TUITION_STORAGE_KEY);
-  const source = Array.isArray(loaded) && loaded.length > 0 ? loaded : demoTuitionPayments;
-  return source.map((record) => normalizeTuitionRecord(record));
+  if (Array.isArray(loaded) && loaded.length > 0) return loaded.map((record) => normalizeTuitionRecord(record));
+
+  const fallback = await loadPaymentsFromApi();
+  return fallback.map((record) => normalizeTuitionRecord(record));
 }
 
-async function savePayments() {
-  localStorage.setItem(TUITION_STORAGE_KEY, JSON.stringify(payments));
-  await saveCollectionData(STORAGE_COLLECTION, payments);
+async function loadPaymentsFromApi() {
+  try {
+    const response = await fetch("/api/tuition-payments");
+    if (!response.ok) throw new Error(`Tuition API returned ${response.status}`);
+    const data = await response.json();
+    return Array.isArray(data.items) ? data.items : [];
+  } catch (error) {
+    console.warn("Tuition API fallback failed", error);
+    return [];
+  }
+}
+
+async function savePayments(options = {}) {
+  // Firebase is the production-ready path already available in this repo.
+  // localStorage is only a development/demo fallback and is not secure for student financial records.
+  cacheLocalData(TUITION_STORAGE_KEY, payments);
+  payments = await saveCollectionData(STORAGE_COLLECTION, payments, options);
+  cacheLocalData(TUITION_STORAGE_KEY, payments);
 }
 
 function render() {
@@ -240,17 +257,23 @@ function parsePreview() {
 
 async function savePreview() {
   if (!previewRecords.length) return;
-  const initials = importInitials.value.trim().toUpperCase();
-  if (!initials) {
-    showAlert("Enter your initials before saving imported records.", "error");
-    importInitials.focus();
+  const staff = window.AOAAuth?.getCurrentUser?.();
+  if (!staff) {
+    showAlert("Please sign in before saving imported records.", "error");
     return;
   }
   const byKey = new Map(payments.map((record) => [getDuplicateKey(record), record]));
   let added = 0;
   let updated = 0;
   previewRecords.forEach((record) => {
-    const signedRecord = { ...record, importedBy: initials };
+    const signedRecord = {
+      ...record,
+      importedBy: staff.initials,
+      importedByUserId: staff.id,
+      importedByName: staff.name,
+      importedByInitials: staff.initials,
+      importedAt: new Date().toISOString()
+    };
     const key = getDuplicateKey(record);
     const existing = byKey.get(key);
     if (existing) {
@@ -305,7 +328,7 @@ async function saveEditedRecord() {
 async function deleteRecord(id) {
   if (!confirm("Delete this tuition payment record?")) return;
   payments = payments.filter((record) => record.id !== id);
-  await savePayments();
+  await savePayments({ allowDeletes: true });
   render();
 }
 
@@ -403,6 +426,10 @@ document.querySelector("#close-tuition-dialog").addEventListener("click", () => 
 document.querySelector("#cancel-tuition-dialog").addEventListener("click", () => dialog.close());
 
 (async () => {
-  payments = sortTuitionRecords(await loadPayments());
+  const [loadedPayments] = await Promise.all([
+    loadPayments(),
+    attachStudentNameDatalists()
+  ]);
+  payments = sortTuitionRecords(loadedPayments);
   render();
 })();

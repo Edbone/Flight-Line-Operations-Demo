@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Instructor student roster for AOA Operations Hub." />
+  <title>Instructor Dashboard - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="instructor-home.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a class="active" href="instructor-home.html">Dashboard</a><a href="students.html">Students</a><a href="sheet1.html">Ground Trainers</a></nav>
+  </header>
+  <main class="student-page instructor-home-page">
+    <header class="tracker-header">
+      <div><h1>Instructor Dashboard</h1><p id="instructor-home-subtitle">Loading your assigned students...</p></div>
+      <div class="controls"><a class="button secondary" href="students.html">Find all students</a></div>
+    </header>
+    <section class="instructor-clock-panel" aria-label="KORL time and civil twilight">
+      <div class="instructor-clock-lead"><span class="student-section-kicker">KORL · Orlando</span><strong id="instructor-local-time">--:--:--</strong><small id="instructor-local-date">Local time</small></div>
+      <div class="instructor-clock-item"><span>Zulu</span><strong id="instructor-zulu-time">--:--:--Z</strong><small>UTC</small></div>
+      <div class="instructor-clock-item"><span>Civil dawn</span><strong id="instructor-civil-dawn">--:--</strong><small>Morning twilight begins</small></div>
+      <div class="instructor-clock-item"><span>Civil twilight</span><strong id="instructor-civil-dusk">--:--</strong><small>Evening twilight ends</small></div>
+    </section>
+    <section class="night-currency-card" aria-labelledby="night-currency-title">
+      <div><h2 id="night-currency-title">Night currency</h2><p>Enter the date currency was completed. This calculator marks 90 days from that date.</p></div>
+      <label>Currency date<input id="night-currency-date" type="date" /></label>
+      <div class="night-currency-result" id="night-currency-result" aria-live="polite"><span>Expiration</span><strong>Select a date</strong><small>Days remaining will appear here.</small></div>
+      <button class="button quiet" id="night-currency-clear" type="button">Clear</button>
+    </section>
+    <section class="instructor-tools-panel" aria-labelledby="instructor-tools-title">
+      <div class="student-panel-heading"><div><span class="student-section-kicker">Quick access</span><h2 id="instructor-tools-title">Instructor tools</h2></div><span>Opens each site in a new tab</span></div>
+      <div class="instructor-tool-tabs" aria-label="Instructor tools">
+        <a class="instructor-tool-link" href="master-schedule.html"><strong>Scheduling</strong><span>Portfolio-local schedule</span><b aria-hidden="true">Open →</b></a>
+        <a class="instructor-tool-link" href="student-dashboard.html"><strong>Course Tracking</strong><span>Demo student progress</span><b aria-hidden="true">Open →</b></a>
+        <a class="instructor-tool-link" href="index.html"><strong>Flight Line Status</strong><span>Sample operations view</span><b aria-hidden="true">Open →</b></a>
+      </div>
+    </section>
+    <section class="metric-grid student-metric-grid" aria-label="Instructor roster summary">
+      <article class="metric-card metric-green"><span>Active students</span><strong id="instructor-active-students">0</strong><small>Currently assigned to you</small></article>
+      <article class="metric-card metric-blue"><span>Total assigned</span><strong id="instructor-total-students">0</strong><small>Active and inactive profiles</small></article>
+    </section>
+    <section class="student-panel instructor-student-panel">
+      <div class="student-panel-heading"><h2>Assigned student profiles</h2><span id="instructor-student-count"></span></div>
+      <label class="search-field instructor-student-search"><span class="sr-only">Search assigned students</span><input id="instructor-student-search" type="search" placeholder="Search by name, course, group, or aircraft" /></label>
+      <div class="student-card-grid" id="instructor-student-grid"></div>
+      <div class="empty-state" id="instructor-student-empty" hidden><strong>No students are linked to this instructor profile.</strong><span>An admin or staff member can assign students from each student profile.</span></div>
+    </section>
+  </main>
+  <script type="module" src="instructor-home.js"></script>
+</body>
+</html>

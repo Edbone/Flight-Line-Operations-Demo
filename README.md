@@ -1,37 +1,27 @@
-# AOA SSR Hub
+# Flight Line Operations — Portfolio Demo
 
-A starter home page for the AOA SSR Hub with a white/blue/yellow theme, built for Vercel deployment.
+This repository mirrors the interface and workflows of the operational flight-line application without connecting to its production data.
 
-## What is included
+## Data safety
 
-- `index.html` - the hub landing page
-- `styles.css` - light theme styling with blue and yellow accents
-- `sheet1.html` - first page for Ground Trainer 1 scheduling and tabs
-- `firebase.js` - placeholder Firebase initialization and Firestore helpers
+- Firebase Authentication, Firestore, and Storage are replaced by a browser-only adapter in `firebase.js`.
+- The site uses a fixed fictional administrator from `auth.js`; no login request is made.
+- Edits are stored only in the current browser's `localStorage`.
+- Student, instructor, attendance, tuition, written-test, and staff examples are fictional portfolio data.
+- Production Firebase deployment files, service credentials, synchronization jobs, and mutating server APIs are intentionally excluded.
+- The fleet maintenance dashboard is the only live embedded integration.
 
-## Firebase setup
+Clearing site data in the browser resets local edits. Nothing in this repository can write to the operational Firebase project.
 
-1. Create a Firebase project in the Firebase console.
-2. Enable Firestore in your Firebase project.
-3. Replace the placeholder config values in `firebase.js` with your Firebase project settings.
-4. Use `saveFormData(sheetId, data)` and `loadFormData(sheetId)` from `firebase.js` in your sheet pages.
+## Run locally
 
-## Vercel deployment
+```bash
+npm test
+npx serve .
+```
 
-This is a static site that can be deployed directly to Vercel:
+Then open the local URL printed by the server. ES modules require an HTTP server; opening the HTML files directly is not recommended.
 
-- Push the project to GitHub.
-- Import the repository into Vercel.
-- Vercel will detect the static site and deploy it automatically.
+## Deployment
 
-## Next steps
-
-1. Add the first sheet page, such as `sheet1.html` or `sheet1.js`.
-2. Link that page from the home page cards.
-3. Build form input and Firebase saving/loading logic on the new sheet page.
-
-## How to view
-
-Open `index.html` in your browser for local preview, or deploy to Vercel for hosting.
-
-If you want, I can help you build the first sheet and wire it directly into Firebase next.
+The static app can be deployed to Vercel. Do not add production Firebase, MyFBO, or service-account environment variables to the portfolio deployment.

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KORL student operations dashboard for dispatch and support." />
+  <title>Students - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-student-page="dashboard">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+  <main class="student-page">
+    <header class="tracker-header">
+      <div><span class="eyebrow tuition-eyebrow">KORL Dispatch</span><h1>Students</h1><p>Group-first operational view for scheduling, attendance, training, and notes.</p></div>
+      <div class="controls"><a class="button primary" href="students.html">Open Students</a><a class="button secondary" href="student-import.html">Import / export</a></div>
+    </header>
+    <nav class="student-tabs" aria-label="Student app views">
+      <a class="active" href="students.html">Home</a><a href="availability.html">Availability</a><a href="alerts.html">Alerts</a><a href="attendance-tracking.html">Attendance</a><a href="student-import.html">Import</a><a href="sap-dashboard.html">SAP Timeline</a>
+    </nav>
+    <section class="metric-grid student-metric-grid" id="student-dashboard-cards" aria-label="Student summary"></section>
+    <section class="student-dashboard-grid">
+      <article class="student-panel group-priority-panel"><div class="student-panel-heading"><h2>Students by group</h2><span>Group 1 / Delta first</span></div><div id="students-by-group"></div></article>
+      <article class="student-panel"><div class="student-panel-heading"><h2>Part 141 / 61</h2></div><div id="students-by-training"></div></article>
+      <article class="student-panel"><div class="student-panel-heading"><h2>Operational watch</h2><a href="alerts.html">Open alerts</a></div><div class="student-mini-list" id="student-watch-list"></div></article>
+    </section>
+  </main>
+  <script type="module" src="student-app.js"></script>
+</body>
+</html>

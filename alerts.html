@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="KORL student operational flags and alerts." />
+  <title>Student Alerts - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body data-student-page="alerts">
+  <header class="topbar"><a class="brand" href="index.html"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a><nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a class="active" href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav></header>
+  <main class="student-page">
+    <header class="tracker-header"><div><span class="eyebrow tuition-eyebrow">Dispatcher Watch</span><h1>Flags and alerts</h1><p>Automatic lists for scheduling, attendance, CFI assignment, stale updates, time off, notes, and documentation review.</p></div></header>
+    <nav class="student-tabs"><a href="students.html">Home</a><a href="availability.html">Availability</a><a class="active" href="alerts.html">Alerts</a><a href="attendance-tracking.html">Attendance</a><a href="student-import.html">Import</a><a href="sap-dashboard.html">SAP Timeline</a></nav>
+    <div class="student-alert-grid" id="alerts-list"></div>
+  </main>
+  <script type="module" src="student-app.js"></script>
+</body>
+</html>

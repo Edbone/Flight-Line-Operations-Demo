@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Student ground school QR code check-in." />
+  <title>Ground School Check-In - Academy of Aviation</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="ground-checkin-body">
+  <main class="ground-checkin-shell">
+    <section class="ground-checkin-card">
+      <img class="ground-checkin-logo" src="assets/aoa-logo.png" alt="Academy of Aviation" />
+      <span class="eyebrow">Ground School Check-In</span>
+      <h1 id="checkin-title">Loading session...</h1>
+      <p id="checkin-session-meta">Please wait while we find this class.</p>
+
+      <form class="ground-checkin-form" id="ground-checkin-form" hidden>
+        <label>First name <input name="student_first_name" required maxlength="80" autocomplete="given-name" /></label>
+        <label>Last name <input name="student_last_name" required maxlength="80" autocomplete="family-name" /></label>
+        <label>Student ID/email <input name="student_email_or_id" maxlength="140" autocomplete="email" placeholder="Optional" /></label>
+        <button class="button primary" type="submit">Check in</button>
+      </form>
+
+      <p class="ground-message" id="checkin-message" role="status"></p>
+    </section>
+  </main>
+
+  <script type="module" src="ground-attendance-checkin.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { loadCollectionData, saveCollectionData } from "./firebase.js";
+import { cacheLocalData, loadCollectionData, saveCollectionData } from "./firebase.js";
 
 const OIL_STORAGE_KEY = "aoa-oil-entries-v1";
 const aircraftClasses = {
@@ -7,27 +7,27 @@ const aircraftClasses = {
 };
 
 const seedOilEntries = [
-  { id: "oil-1", date: "2026-05-07", aircraft: "52522", quarts: 1, tach: 9435.1, initials: "ESP", notes: "" },
-  { id: "oil-2", date: "2026-05-08", aircraft: "6064R", quarts: 1, tach: 11422.2, initials: "ESP", notes: "" },
-  { id: "oil-3", date: "2026-05-08", aircraft: "55297", quarts: 1, tach: 5325.1, initials: "LW", notes: "" },
+  { id: "oil-1", date: "2026-05-07", aircraft: "52522", quarts: 1, tach: 9435.1, initials: "PA", notes: "" },
+  { id: "oil-2", date: "2026-05-08", aircraft: "6064R", quarts: 1, tach: 11422.2, initials: "PA", notes: "" },
+  { id: "oil-3", date: "2026-05-08", aircraft: "55297", quarts: 1, tach: 5325.1, initials: "NC", notes: "" },
   { id: "oil-4", date: "2026-05-10", aircraft: "174TH", quarts: 1, tach: "", initials: "", notes: "" },
   { id: "oil-5", date: "2026-05-10", aircraft: "52522", quarts: 1, tach: "", initials: "", notes: "" },
   { id: "oil-6", date: "2026-05-10", aircraft: "464ER", quarts: 1, tach: "", initials: "", notes: "" },
   { id: "oil-7", date: "2026-05-10", aircraft: "55297", quarts: 1, tach: "", initials: "", notes: "" },
   { id: "oil-8", date: "2026-05-11", aircraft: "55297", quarts: 2, tach: "", initials: "", notes: "" },
-  { id: "oil-9", date: "2026-05-15", aircraft: "52522", quarts: 1, tach: 9449.2, initials: "ESP", notes: "" },
-  { id: "oil-10", date: "2026-05-20", aircraft: "24108", quarts: 1, tach: 4262.3, initials: "ESP", notes: "" },
-  { id: "oil-11", date: "2026-05-21", aircraft: "24108", quarts: 1, tach: 4265.3, initials: "ESP", notes: "" },
-  { id: "oil-12", date: "2026-05-21", aircraft: "6064R", quarts: 1, tach: 11360.4, initials: "ESP", notes: "" },
-  { id: "oil-13", date: "2026-05-21", aircraft: "464ER", quarts: 1, tach: 7844.7, initials: "ESP", notes: "" },
-  { id: "oil-14", date: "2026-05-21", aircraft: "55297", quarts: 1, tach: 5345.9, initials: "ESP", notes: "" },
-  { id: "oil-15", date: "2026-05-24", aircraft: "464ER", quarts: 1, tach: 10847.2, initials: "LW", notes: "" },
-  { id: "oil-16", date: "2026-05-24", aircraft: "55297", quarts: 2, tach: 7566.4, initials: "LW", notes: "" },
-  { id: "oil-17", date: "2026-05-25", aircraft: "464ER", quarts: 1, tach: 10847.8, initials: "JA", notes: "" },
+  { id: "oil-9", date: "2026-05-15", aircraft: "52522", quarts: 1, tach: 9449.2, initials: "PA", notes: "" },
+  { id: "oil-10", date: "2026-05-20", aircraft: "24108", quarts: 1, tach: 4262.3, initials: "PA", notes: "" },
+  { id: "oil-11", date: "2026-05-21", aircraft: "24108", quarts: 1, tach: 4265.3, initials: "PA", notes: "" },
+  { id: "oil-12", date: "2026-05-21", aircraft: "6064R", quarts: 1, tach: 11360.4, initials: "PA", notes: "" },
+  { id: "oil-13", date: "2026-05-21", aircraft: "464ER", quarts: 1, tach: 7844.7, initials: "PA", notes: "" },
+  { id: "oil-14", date: "2026-05-21", aircraft: "55297", quarts: 1, tach: 5345.9, initials: "PA", notes: "" },
+  { id: "oil-15", date: "2026-05-24", aircraft: "464ER", quarts: 1, tach: 10847.2, initials: "NC", notes: "" },
+  { id: "oil-16", date: "2026-05-24", aircraft: "55297", quarts: 2, tach: 7566.4, initials: "NC", notes: "" },
+  { id: "oil-17", date: "2026-05-25", aircraft: "464ER", quarts: 1, tach: 10847.8, initials: "CR", notes: "" },
   { id: "oil-18", date: "2026-05-26", aircraft: "24108", quarts: 1, tach: 4275.6, initials: "", notes: "" },
-  { id: "oil-19", date: "2026-05-29", aircraft: "24108", quarts: 1, tach: 4282.6, initials: "ESP", notes: "" },
-  { id: "oil-20", date: "2026-05-31", aircraft: "52522", quarts: 1, tach: 12632.8, initials: "LW", notes: "" },
-  { id: "oil-21", date: "2026-06-01", aircraft: "52522", quarts: 2, tach: 9466.6, initials: "TED", notes: "" },
+  { id: "oil-19", date: "2026-05-29", aircraft: "24108", quarts: 1, tach: 4282.6, initials: "PA", notes: "" },
+  { id: "oil-20", date: "2026-05-31", aircraft: "52522", quarts: 1, tach: 12632.8, initials: "NC", notes: "" },
+  { id: "oil-21", date: "2026-06-01", aircraft: "52522", quarts: 2, tach: 9466.6, initials: "DP", notes: "" },
   { id: "oil-22", date: "2026-06-01", aircraft: "55297", quarts: 2, tach: 5369.3, initials: "", notes: "" }
 ];
 
@@ -44,9 +44,10 @@ async function loadOilEntries() {
   return Array.isArray(loaded) && loaded.length > 0 ? loaded : seedOilEntries;
 }
 
-async function saveOilEntries() {
-  localStorage.setItem(OIL_STORAGE_KEY, JSON.stringify(oilEntries));
-  await saveCollectionData("oil-entries", oilEntries);
+async function saveOilEntries(options = {}) {
+  cacheLocalData(OIL_STORAGE_KEY, oilEntries);
+  oilEntries = await saveCollectionData("oil-entries", oilEntries, options);
+  cacheLocalData(OIL_STORAGE_KEY, oilEntries);
 }
 
 function escapeHtml(value = "") {
@@ -134,6 +135,7 @@ function openOilForm() {
   const lastDay = new Date(year, month, 0).getDate();
   const day = Math.min(new Date().getDate(), lastDay);
   form.elements.date.value = `${monthFilter.value}-${String(day).padStart(2, "0")}`;
+  form.elements.initials.value = window.AOAAuth?.getCurrentUserInitials?.() || "";
   dialog.showModal();
 }
 
@@ -152,7 +154,19 @@ function exportOilCsv() {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(form));
-  oilEntries.push({ id: crypto.randomUUID(), ...data, quarts: Number(data.quarts), tach: data.tach === "" ? "" : Number(data.tach), initials: data.initials.toUpperCase() });
+  const staff = window.AOAAuth?.getCurrentUser?.();
+  if (!staff) return;
+  oilEntries.push({
+    id: crypto.randomUUID(),
+    ...data,
+    quarts: Number(data.quarts),
+    tach: data.tach === "" ? "" : Number(data.tach),
+    initials: staff.initials,
+    recordedByUserId: staff.id,
+    recordedByName: staff.name,
+    recordedByInitials: staff.initials,
+    recordedAt: new Date().toISOString()
+  });
   saveOilEntries();
   renderAircraftFilter();
   monthFilter.value = data.date.slice(0, 7);
@@ -164,7 +178,7 @@ rows.addEventListener("click", (event) => {
   const id = event.target.dataset.delete;
   if (!id || !confirm("Delete this oil entry?")) return;
   oilEntries = oilEntries.filter((entry) => entry.id !== id);
-  saveOilEntries();
+  saveOilEntries({ allowDeletes: true });
   renderAircraftFilter();
   render();
 });

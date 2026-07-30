@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Basic user guide for the AOA Operations Hub." />
+  <title>User Guide - AOA Operations Hub</title>
+  <link rel="icon" type="image/png" href="assets/aoa-logo-source.png" />
+  <script>document.documentElement.classList.add("auth-checking");</script>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="auth.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Academy of Aviation operations home"><img src="assets/aoa-logo.png" alt="Academy of Aviation" /></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="students.html">Students</a><a href="instructors.html">Instructors</a><a href="master-schedule.html">Master Schedule</a><a href="sheet1.html">Ground Trainers</a><a href="ground-attendance.html">Ground Attendance</a><a href="tv-screens.html">TV Screens</a><a href="stage-checks.html">Stage Checks</a><a href="notes.html">Operations Notes</a><a href="maintenance.html">Fleet Maintenance</a><a href="tuition-tracking.html">Tuition Tracking</a><a href="written-tests.html">Written Test Tracking</a><a href="oil-tracker.html">Oil Tracker</a><a href="e6b-rentals.html">E6B Rentals</a><a href="fuel-discrepancies.html">Fuel Reports</a></nav>
+  </header>
+
+  <main class="guide-page">
+    <header class="tracker-header guide-header">
+      <div>
+        <span class="eyebrow tuition-eyebrow">Reference</span>
+        <h1>User guide</h1>
+        <p>Basic operating guide for dispatchers, instructors, and admin users working in the AOA Operations Hub.</p>
+      </div>
+    </header>
+
+    <section class="guide-layout">
+      <aside class="guide-toc" aria-label="Guide sections">
+        <a href="#quick-start">Quick start</a>
+        <a href="#home">Home</a>
+        <a href="#students">Students</a>
+        <a href="#sap-matrix">SAP Matrix</a>
+        <a href="#master-schedule">Master schedule</a>
+        <a href="#ground">Ground trainers</a>
+        <a href="#notes">Operations notes</a>
+        <a href="#tracking">Tracking pages</a>
+        <a href="#management">Management</a>
+      </aside>
+
+      <div class="guide-content">
+        <section id="quick-start" class="guide-section">
+          <span class="section-label">Access</span>
+          <h2>Quick start</h2>
+          <ol>
+            <li>Log in with your staff account. New accounts must be approved by an admin before the hub opens.</li>
+            <li>Use the top navigation to move between dispatch tools. Admin-only controls appear only for admin users.</li>
+            <li>Watch the save status labels on scheduling and management pages before leaving after a change.</li>
+          </ol>
+        </section>
+
+        <section id="home" class="guide-section">
+          <span class="section-label">Dispatch</span>
+          <h2>Home</h2>
+          <p>The home page is the operational heads-up board. Use it first during a shift to see student items, notes, weather, and live operations.</p>
+          <ul>
+            <li><strong>Spin training events:</strong> shows students with spin training due in the next 7 days. Use <strong>+ Add</strong> to choose a roster student, date, and time.</li>
+            <li><strong>Completed:</strong> clears the active spin training alert and saves the completion to the student profile.</li>
+            <li><strong>Student watch:</strong> highlights active students with urgent issues such as low attendance, no weekly sessions, missing CFI, stale updates, or time off.</li>
+            <li><strong>Latest notes:</strong> shows current staff communication, with pinned notes at the top.</li>
+          </ul>
+        </section>
+
+        <section id="students" class="guide-section">
+          <span class="section-label">Roster</span>
+          <h2>Students</h2>
+          <ul>
+            <li>Use the student roster to search, filter, and open profile cards.</li>
+            <li>On a profile, use <strong>Include on attendance list</strong> to hide students from MyFBO attendance screens when they are visiting from another campus or should not be tracked locally.</li>
+            <li>Use <strong>Spin training event</strong>, date, and time when a student should appear on the home spin watch.</li>
+            <li>The profile records the last spin training completion when dispatch marks it completed from the home page.</li>
+            <li>CSV import/export includes attendance list and spin training fields.</li>
+          </ul>
+        </section>
+
+        <section id="sap-matrix" class="guide-section">
+          <span class="section-label">Admin</span>
+          <h2>SAP Matrix timelines</h2>
+          <ol>
+            <li>Open a student profile and select <strong>Upload SAP Matrix</strong>, or open <strong>SAP Timeline</strong> from the Students tabs.</li>
+            <li>Upload the PDF and wait for the server to validate and extract it. PandaDoc signature certificate pages are ignored.</li>
+            <li>Review the proposed student match, profile values, milestone types, projected dates, and linked written/practice/stage-check status.</li>
+            <li>Correct, skip, keep, replace, or add rows as needed, then confirm. Uploading alone never changes the live timeline.</li>
+            <li>Use the SAP dashboard for overdue items, due windows, written readiness, unscheduled checks, endorsements, and projected graduation risk.</li>
+          </ol>
+          <p>Only administrators can upload, confirm, or open source SAP PDFs. Actual completions, results, and instructor notes are preserved when projected dates change.</p>
+        </section>
+
+        <section id="master-schedule" class="guide-section">
+          <span class="section-label">Scheduling</span>
+          <h2>Master schedule</h2>
+          <ul>
+            <li><strong>New booking:</strong> create a single student or activity booking with instructor, aircraft, day, start, and end time.</li>
+            <li><strong>Batch schedule:</strong> create repeated bookings across selected days.</li>
+            <li><strong>Batch delete:</strong> remove multiple bookings by student/activity, instructor, day, or category.</li>
+            <li><strong>Instructor by day:</strong> plan each instructor row across the week.</li>
+            <li><strong>Daily by airplane:</strong> view aircraft capacity. Items with no available airplane appear in the overbooked row.</li>
+            <li><strong>Drag and drop:</strong> admin users can move bookings to another time, instructor row, or aircraft row.</li>
+          </ul>
+        </section>
+
+        <section id="ground" class="guide-section">
+          <span class="section-label">Ground</span>
+          <h2>Ground trainers and attendance</h2>
+          <ul>
+            <li>Use <strong>Ground Trainers</strong> to book weekly trainer slots.</li>
+            <li>Use <strong>Ground Attendance</strong> to create ground school sessions and track check-ins.</li>
+            <li>Students hidden from the attendance list are excluded from the MyFBO attendance tracking view.</li>
+          </ul>
+        </section>
+
+        <section id="notes" class="guide-section">
+          <span class="section-label">Communication</span>
+          <h2>Operations notes</h2>
+          <ul>
+            <li>Post signed notes for dispatch handoffs, schedule reminders, or policy updates.</li>
+            <li>Pin high-priority notes so they stay at the top of the notes list and home page.</li>
+            <li>Use search to find older notes by text or author.</li>
+          </ul>
+        </section>
+
+        <section id="tracking" class="guide-section">
+          <span class="section-label">Trackers</span>
+          <h2>Maintenance, oil, fuel, E6B, tuition, written tests, and stage checks</h2>
+          <ul>
+            <li><strong>Fleet Maintenance:</strong> opens the maintenance tracker preview and full maintenance dashboard.</li>
+            <li><strong>Oil Tracker:</strong> records oil added by aircraft, tach time, date, and initials.</li>
+            <li><strong>Fuel Reports:</strong> logs fueling delays, contamination, fuel levels, and related notes.</li>
+            <li><strong>E6B Rentals:</strong> tracks calculator rentals and returns.</li>
+            <li><strong>Tuition Tracking:</strong> imports and tracks payment schedule details.</li>
+            <li><strong>Written Test Tracking:</strong> tracks written test progress and scheduled tests.</li>
+            <li><strong>Stage Checks:</strong> monitors stage check request and scheduling timing.</li>
+          </ul>
+        </section>
+
+        <section id="management" class="guide-section">
+          <span class="section-label">Admin</span>
+          <h2>Management</h2>
+          <ul>
+            <li>The Management page is visible to admin users.</li>
+            <li><strong>Staff accounts:</strong> approve users, update names/initials, grant or remove admin access, and send reset emails.</li>
+            <li><strong>Aircraft:</strong> add or remove aircraft from the Master Schedule aircraft list.</li>
+            <li>When an aircraft is removed, existing bookings using that aircraft are moved to another open aircraft at the same time when possible.</li>
+            <li>If no aircraft is open, the booking is left with no aircraft and will appear as no plane available / overbooked in the airplane schedule view.</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
