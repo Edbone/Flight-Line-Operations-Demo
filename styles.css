@@ -13208,8 +13208,9 @@ body {
 }
 
 .portfolio-mark {
-  border-color: #dbe4ef;
-  background: #fff;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .portfolio-mark img {
